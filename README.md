@@ -7,11 +7,11 @@ Ce programme est conçu pour faciliter la gestion et le suivi du projet Fish'n C
 
 1. **Cloner le dépôt :**
     ```bash
-    git clone https://github.com/votre-utilisateur/projet-red_Fish-n-chips.git
+    git clone https://github.com/SeiYaaa71/Puissance-4_Projet-GMK.git
     ```
 2. **Accéder au dossier :**
     ```bash
-    cd projet-red_Fish-n-chips
+    cd Puissance-4_Projet-GMK.git
     ```
 ## Utilisation
     ``` bash

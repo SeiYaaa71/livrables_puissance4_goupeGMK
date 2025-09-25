@@ -7,6 +7,15 @@
 <body>
 <h1>{{ .Title }}</h1>
 <p>{{ .Message }}</p>
+
+<form method="post" action="/contact">
+    <label>Nom :</label><br>
+    <input type="text" name="name"><br><br>
+    <label>Message :</label><br>
+    <textarea name="msg"></textarea><br><br>
+    <button type="submit">Envoyer</button>
+</form>
+
 <nav>
     <a href="/">Accueil</a> |
     <a href="/about">À propos</a> |
@@ -14,6 +23,7 @@
 </nav>
 </body>
 </html>
+
 
 
 
