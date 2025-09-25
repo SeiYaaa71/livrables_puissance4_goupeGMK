@@ -4,6 +4,8 @@ body {
   color: hsl(0, 0%, 10%);
   margin: 0;
   line-height: 1.6;
+  background: url("https://copilot.microsoft.com/th/id/BCO.cb43e0bd-a3c6-4bb4-ba0b-7941c9bbb401.png") no-repeat center center fixed;
+  background-size: cover;
 }
 
 /* En-tête */
@@ -14,6 +16,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background:;
 }
 
 /* Titre du site */
@@ -47,7 +50,7 @@ nav a:hover {
   grid-template-rows: repeat(6, 1fr);
   gap: 10px;
   justify-content: center;
-  margin: 50px auto; /* centré + espace autour */
+  margin: 0 auto 40px auto; /* centré + espace autour */
 
   background: #0066cc;         
   padding: 20px;
@@ -62,7 +65,31 @@ nav a:hover {
   gap: 10px;
 }
 
-/* Cases */
+/* Ligne de contrôle (flèches) */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 colonnes comme le plateau */
+  gap: 10px;
+  justify-content: center;
+  margin: 30px auto 20px auto; /* centré au-dessus du plateau */
+  width: fit-content;
+}
+
+.controls button {
+  font-size: 1.5rem;
+  padding: 30px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background: #eee;
+  transition: background 0.2s ease;
+}
+
+.controls button:hover {
+  background: #ccc;
+}
+
+/* Cases vides */
 .cell {
   width: 70px;
   height: 70px;
@@ -70,4 +97,34 @@ nav a:hover {
   background: #fff;         
   box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.25),
               inset 0 0 8px rgba(0, 0, 0, 0.9);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Jeton du joueur 1 (rouge) */
+.player1 {
+  background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.4),
+              inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Jeton du joueur 2 (jaune) */
+.player2 {
+  background: radial-gradient(circle at 30% 30%, #ffff99, #e6c200);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.4),
+              inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Boutons généraux (reset, etc.) */
+button {
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background: #eee;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #ccc;
 }

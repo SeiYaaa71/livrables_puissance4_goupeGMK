@@ -2,13 +2,12 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Puissance 4</title>
-<link rel="stylesheet" href="/stylecss/plus.css">
-<link rel="stylesheet/scss" type="text/scss" href="/stylecss/plus.scss">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/stylecss/plus.css">
 </head>
 <body>
   <header>
-    <h1>Puissance 4</h1>
+    <h1>{{ .Title }}</h1>
     <nav>
       <a href="/">Accueil</a> |
       <a href="/about">À propos</a> |
@@ -17,19 +16,44 @@
   </header>
 
   <main>
+    <p>{{ .Message }}</p>
+
+    {{if eq .Winner 0}}
+      <p>Joueur actuel : {{ .Current }}</p>
+    {{else}}
+      <h2>🎉 Joueur {{ .Winner }} a gagné !</h2>
+    {{end}}
+
+    <!-- Flèches alignées avec les colonnes -->
+    <div class="controls">
+      {{range $col := seq 0 6}}
+        <a href="/play?col={{$col}}">
+          <button>↓</button>
+        </a>
+      {{end}}
+    </div>
+
+    <!-- Plateau -->
     <div class="board">
-      <!-- 6 lignes × 7 colonnes -->
-      {{range $row := seq 0 5}}
+      {{range $row := .Grid}}
         <div class="row">
-          {{range $col := seq 0 6}}
-            <div class="cell"></div>
+          {{range $cell := $row}}
+            <div class="cell player{{$cell}}"></div>
           {{end}}
         </div>
       {{end}}
     </div>
+
+    <!-- Bouton reset -->
+    <form action="/reset" method="post">
+      <button type="submit">🔄 Nouvelle partie</button>
+    </form>
   </main>
 </body>
 </html>
+
+
+
 
 
 
