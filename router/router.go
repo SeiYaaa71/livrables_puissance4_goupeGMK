@@ -1,19 +1,55 @@
 package router
 
 import (
-	"net/http"
-	"power4/controller"
+    "html/template"
+    "net/http"
 )
 
-// New crée et retourne un nouvel objet ServeMux configuré avec les routes de l'application
 func New() *http.ServeMux {
+    mux := http.NewServeMux()
 
-	mux := http.NewServeMux() // Création d'un nouveau ServeMux, qui est un routeur simple pour les requêtes HTTP
+    // Fonction utilitaire seq pour générer des boucles dans les templates
+    funcMap := template.FuncMap{
+        "seq": func(start, end int) []int {
+            s := make([]int, end-start+1)
+            for i := range s {
+                s[i] = start + i
+            }
+            return s
+        },
+    }
 
-	// On associe les chemins URL à des fonctions spécifiques du controller
-	mux.HandleFunc("/", controller.Home)           // "/" correspond à la page d'accueil. Appelle la fonction Home du controller
-	mux.HandleFunc("/about", controller.About)     // "/about" correspond à la page "À propos". Appelle la fonction About
-	mux.HandleFunc("/contact", controller.Contact) // "/contact" correspond à la page de contact. Appelle la fonction Contact
+    // Page d'accueil (Puissance 4)
+    mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        tmpl := template.Must(
+            template.New("index.html").Funcs(funcMap).ParseFiles("template/index.html"),
+        )
+        tmpl.Execute(w, map[string]string{
+            "Title":   "Puissance 4",
+            "Message": "Bienvenue sur le jeu !",
+        })
+    })
 
-	return mux // On retourne le routeur configuré
+    // Page "À propos"
+    mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+        tmpl := template.Must(template.ParseFiles("template/about.html"))
+        tmpl.Execute(w, map[string]string{
+            "Title":   "À propos",
+            "Message": "Ceci est un projet Puissance 4 en Go.",
+        })
+    })
+
+    // Page "Contact"
+    mux.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+        tmpl := template.Must(template.ParseFiles("template/contact.html"))
+        tmpl.Execute(w, map[string]string{
+            "Title":   "Contact",
+            "Message": "Envoyez-nous un message.",
+        })
+    })
+
+    // Fichiers statiques (CSS, images…)
+    mux.Handle("/stylecss/", http.StripPrefix("/stylecss/", http.FileServer(http.Dir("stylecss"))))
+
+    return mux
 }

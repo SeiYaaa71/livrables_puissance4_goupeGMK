@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"power4/router"
+    "fmt"
+    "net/http"
+    "power4/router" // adapte ce chemin au nom de module dans ton go.mod
 )
 
 func main() {
-	// Charge le routeur
-	r := router.New()
-
-	fmt.Println("🚀 Serveur démarré sur http://localhost:8080")
-	http.ListenAndServe(":8080", r)
+    r := router.New()
+    fmt.Println("🚀 Serveur démarré sur http://localhost:8080")
+    http.ListenAndServe(":8080", r)
 }
+

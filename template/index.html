@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ .Title }}</title>
+  <meta charset="UTF-8">
+  <title>Puissance 4</title>
+<link rel="stylesheet" href="/stylecss/plus.css">
+<link rel="stylesheet/scss" type="text/scss" href="/stylecss/plus.scss">
 </head>
 <body>
-<h1>{{ .Title }}</h1>
-<p>{{ .Message }}</p>
-<nav>
-    <a href="/">Accueil</a> |
-    <a href="/about">À propos</a> |
-    <a href="/contact">Contact</a>
-</nav>
+  <header>
+    <h1>Puissance 4</h1>
+    <nav>
+      <a href="/">Accueil</a> |
+      <a href="/about">À propos</a> |
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="board">
+      <!-- 6 lignes × 7 colonnes -->
+      {{range $row := seq 0 5}}
+        <div class="row">
+          {{range $col := seq 0 6}}
+            <div class="cell"></div>
+          {{end}}
+        </div>
+      {{end}}
+    </div>
+  </main>
 </body>
 </html>
 
