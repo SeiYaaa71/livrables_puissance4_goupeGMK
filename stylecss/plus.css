@@ -1,28 +1,53 @@
+/* Style global */
 body { 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: oklab(100% 0 -0.00011);
+  background: oklab(100% 0 -0.00011) 
+              url("https://copilot.microsoft.com/th/id/BCO.cb43e0bd-a3c6-4bb4-ba0b-7941c9bbb401.png") 
+              no-repeat center center fixed;
+  background-size: cover;
   color: hsl(0, 0%, 10%);
   margin: 0;
   line-height: 1.6;
-  background: url("https://copilot.microsoft.com/th/id/BCO.cb43e0bd-a3c6-4bb4-ba0b-7941c9bbb401.png") no-repeat center center fixed;
-  background-size: cover;
+  padding-top: 90px; /* espace pour la barre fixe */
 }
 
-/* En-tête */
-header {
-  padding: 20px 40px;
-  background: hsl(0, 0%, 100%);
-  border-bottom: 1px solid #ddd;
+/* Barre d’état en haut */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 2px solid #ddd;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background:;
+  align-items: flex-start;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  z-index: 1000;
 }
 
-/* Titre du site */
-header h1 {
+.top-bar .left   { flex: 1; text-align: left; }
+.top-bar .center { flex: 2; text-align: center; }
+.top-bar .right  { flex: 1; text-align: left; } /* bouton bien collé à gauche */
+
+.top-bar h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
+}
+
+.top-bar .message {
+  display: block;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #555;
+  margin-top: 4px;
+}
+
+.top-bar .turn-big {
+  margin-top: 8px;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #222;
 }
@@ -50,8 +75,7 @@ nav a:hover {
   grid-template-rows: repeat(6, 1fr);
   gap: 10px;
   justify-content: center;
-  margin: 0 auto 40px auto; /* centré + espace autour */
-
+  margin: 40px auto 80px auto; /* espace sous la barre + centrage */
   background: #0066cc;         
   padding: 20px;
   border-radius: 20px;
@@ -68,16 +92,15 @@ nav a:hover {
 /* Ligne de contrôle (flèches) */
 .controls {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 colonnes comme le plateau */
+  grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   justify-content: center;
-  margin: 30px auto 20px auto; /* centré au-dessus du plateau */
+  margin: 100px auto 20px auto;
   width: fit-content;
 }
 
-.controls button {
-  font-size: 1.5rem;
-  padding: 30px;
+.controls button,
+button {
   cursor: pointer;
   border: none;
   border-radius: 6px;
@@ -85,11 +108,22 @@ nav a:hover {
   transition: background 0.2s ease;
 }
 
+.controls button {
+  font-size: 1.5rem;
+  padding: 30px;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 1.2rem;
+}
+
+button:hover,
 .controls button:hover {
   background: #ccc;
 }
 
-/* Cases vides */
+/* Cases */
 .cell {
   width: 70px;
   height: 70px;
@@ -100,31 +134,15 @@ nav a:hover {
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
-/* Jeton du joueur 1 (rouge) */
+/* Jetons */
 .player1 {
   background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.4),
               inset 0 0 15px rgba(0, 0, 0, 0.8);
 }
 
-/* Jeton du joueur 2 (jaune) */
 .player2 {
   background: radial-gradient(circle at 30% 30%, #ffff99, #e6c200);
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.4),
               inset 0 0 15px rgba(0, 0, 0, 0.8);
-}
-
-/* Boutons généraux (reset, etc.) */
-button {
-  padding: 8px 12px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  background: #eee;
-  transition: background 0.2s ease;
-}
-
-button:hover {
-  background: #ccc;
 }

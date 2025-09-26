@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -6,29 +7,39 @@
   <link rel="stylesheet" href="/stylecss/plus.css">
 </head>
 <body>
-  <header>
-    <h1>{{ .Title }}</h1>
-    <nav>
-      <a href="/">Accueil</a> |
-      <a href="/about">À propos</a> |
-      <a href="/contact">Contact</a>
-    </nav>
+  <!-- Barre unique -->
+  <header class="top-bar">
+    <div class="left">
+      <nav aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/about">À propos</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+
+    <div class="center" aria-live="polite">
+      <h1>{{ .Title }}</h1>
+      {{if eq .Winner 0}}
+        <span class="message">{{ .Message }}</span>
+        <div class="turn-big">Tour du joueur : {{ .Current }}</div>
+      {{else}}
+        <span class="win">🎉 Joueur {{ .Winner }} a gagné !</span>
+      {{end}}
+    </div>
+
+    <div class="right">
+      <form action="/reset" method="post">
+        <button type="submit">🔄 Nouvelle partie</button>
+      </form>
+    </div>
   </header>
 
   <main>
-    <p>{{ .Message }}</p>
-
-    {{if eq .Winner 0}}
-      <p>Joueur actuel : {{ .Current }}</p>
-    {{else}}
-      <h2>🎉 Joueur {{ .Winner }} a gagné !</h2>
-    {{end}}
-
     <!-- Flèches alignées avec les colonnes -->
     <div class="controls">
       {{range $col := seq 0 6}}
         <a href="/play?col={{$col}}">
-          <button>↓</button>
+          <button aria-label="Jouer dans la colonne {{$col}}">↓</button>
         </a>
       {{end}}
     </div>
@@ -43,14 +54,10 @@
         </div>
       {{end}}
     </div>
-
-    <!-- Bouton reset -->
-    <form action="/reset" method="post">
-      <button type="submit">🔄 Nouvelle partie</button>
-    </form>
   </main>
 </body>
 </html>
+
 
 
 
