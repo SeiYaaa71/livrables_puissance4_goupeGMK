@@ -1,86 +1,139 @@
-/* Style global */
-body { 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: oklab(100% 0 -0.00011) 
-              url("https://copilot.microsoft.com/th/id/BCO.cb43e0bd-a3c6-4bb4-ba0b-7941c9bbb401.png") 
-              no-repeat center center fixed;
-  background-size: cover;
-  color: hsl(0, 0%, 10%);
+/* Fond global inspiré de l’image */
+body {
   margin: 0;
-  line-height: 1.6;
-  padding-top: 90px; /* espace pour la barre fixe */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #f5f7fb;
+
+  background: radial-gradient(1200px 600px at 20% 0%, #0a3d73 0%, #062a50 40%, #041d39 70%, #041a33 100%);
+  overflow-x: hidden;
 }
 
-/* Barre d’état en haut */
-.top-bar {
+/* Cercles décoratifs flous (rouge/jaune/bleu) */
+body::before, body::after {
+  content: "";
   position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  background: #fff;
-  border-bottom: 2px solid #ddd;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::before {
+  background:
+    radial-gradient(200px 200px at 10% 15%, rgba(255, 0, 0, 0.18), transparent 60%),
+    radial-gradient(220px 220px at 85% 20%, rgba(255, 215, 0, 0.18), transparent 60%),
+    radial-gradient(260px 260px at 25% 85%, rgba(0, 140, 255, 0.18), transparent 60%),
+    radial-gradient(240px 240px at 75% 80%, rgba(255, 0, 0, 0.14), transparent 60%);
+  filter: blur(10px);
+}
+
+body::after {
+  background:
+    radial-gradient(180px 180px at 35% 60%, rgba(255, 215, 0, 0.16), transparent 60%),
+    radial-gradient(220px 220px at 65% 65%, rgba(0, 140, 255, 0.16), transparent 60%);
+  filter: blur(12px);
+}
+
+/* Layout */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Top bar */
+.topbar {
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 12px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333;
-  z-index: 1000;
+  align-items: center;
+  padding: 14px 24px;
+  background: rgba(5, 29, 59, 0.6);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
 }
 
-.top-bar .left   { flex: 1; text-align: left; }
-.top-bar .center { flex: 2; text-align: center; }
-.top-bar .right  { flex: 1; text-align: left; } /* bouton bien collé à gauche */
-
-.top-bar h1 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-.top-bar .message {
-  display: block;
-  font-size: 1rem;
-  font-weight: normal;
-  color: #555;
-  margin-top: 4px;
-}
-
-.top-bar .turn-big {
-  margin-top: 8px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #222;
-}
-
-/* Navigation */
-nav {
-  display: flex;
-  gap: 20px;
-}
-
-nav a {
-  color: hsl(0, 0%, 20%);
+.nav a {
+  color: #e7ecf7;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease-in-out;
+  font-weight: 600;
+  margin-right: 16px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-nav a:hover {
-  color: #0066cc;
+.nav a:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
 }
 
-/* Plateau de jeu */
-.board {
+/* Status (titre/messages) */
+.status {
+  text-align: center;
+  margin: 24px auto 16px auto;
+}
+
+.status h1 {
+  margin: 0 0 6px 0;
+  font-size: 2rem;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.status .subtitle {
+  margin: 0;
+  color: #cfe2ff;
+}
+
+.status .turn {
+  margin: 6px 0 0 0;
+  font-weight: 600;
+  color: #ffea86;
+}
+
+/* Controls (flèches) */
+.controls {
   display: grid;
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   justify-content: center;
-  margin: 40px auto 80px auto; /* espace sous la barre + centrage */
-  background: #0066cc;         
+  margin: 18px auto 20px auto;
+  width: 560px; /* aligné avec le plateau */
+}
+
+.controls button {
+  width: 100%;
+  font-size: 1.2rem;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  color: #133a6b;
+  background: linear-gradient(180deg, #eaf0f9, #dbe6f7);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.controls button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+/* Board */
+.board {
+  display: grid;
+  grid-template-rows: repeat(6, auto);
+  gap: 10px;
+  margin: 0 auto 40px auto;
+
+  width: 560px; /* 7 cols * (70px + 10px gap) - dernier gap compensé visuellement */
   padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  width: fit-content;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #1d5fb3, #0f4591);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
 }
 
 .row {
@@ -89,60 +142,43 @@ nav a:hover {
   gap: 10px;
 }
 
-/* Ligne de contrôle (flèches) */
-.controls {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-  justify-content: center;
-  margin: 100px auto 20px auto;
-  width: fit-content;
-}
-
-.controls button,
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  background: #eee;
-  transition: background 0.2s ease;
-}
-
-.controls button {
-  font-size: 1.5rem;
-  padding: 30px;
-}
-
-button {
-  padding: 8px 12px;
-  font-size: 1.2rem;
-}
-
-button:hover,
-.controls button:hover {
-  background: #ccc;
-}
-
-/* Cases */
 .cell {
-  width: 65px;
-  height: 65px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: #fff;         
-  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.25),
-              inset 0 0 8px rgba(0, 0, 0, 0.9);
-  transition: background 0.3s ease, transform 0.2s ease;
+  background: #fff;
+  box-shadow: inset 0 0 16px rgba(255,255,255,0.35),
+              inset 0 0 10px rgba(0,0,0,0.75);
 }
 
-/* Jetons */
+/* Tokens */
 .player1 {
   background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
-  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.4),
-              inset 0 0 15px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.4),
+              inset 0 0 15px rgba(0,0,0,0.8);
 }
 
 .player2 {
   background: radial-gradient(circle at 30% 30%, #ffff99, #e6c200);
-  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.4),
-              inset 0 0 15px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.4),
+              inset 0 0 15px rgba(0,0,0,0.8);
 }
+
+/* Buttons */
+.btn.primary {
+  background: linear-gradient(180deg, #2d79ff, #1b5ed6);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn.primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
