@@ -4,16 +4,16 @@ import (
     "html/template"
     "net/http"
     "strconv"
-
-    "power4/game" // adapte au nom de module dans go.mod
+    "power4/game" // correspond au module défini dans go.mod
 )
 
 var currentGame = game.NewGame()
 
+// New retourne un ServeMux avec toutes les routes configurées
 func New() *http.ServeMux {
     mux := http.NewServeMux()
 
-    // Fonction utilitaire seq
+    // Fonction utilitaire seq pour générer les colonnes (0 → 6)
     funcMap := template.FuncMap{
         "seq": func(start, end int) []int {
             s := make([]int, end-start+1)
@@ -57,27 +57,11 @@ func New() *http.ServeMux {
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })
 
-    // Page "À propos"
-    mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
-        tmpl := template.Must(template.ParseFiles("template/about.html"))
-        tmpl.Execute(w, map[string]string{
-            "Title":   "À propos",
-            "Message": "Ceci est un projet Puissance 4 en Go.",
-        })
-    })
-
-    // Page "Contact"
-    mux.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
-        tmpl := template.Must(template.ParseFiles("template/contact.html"))
-        tmpl.Execute(w, map[string]string{
-            "Title":   "Contact",
-            "Message": "Envoyez-nous un message.",
-        })
-    })
-
-    // Fichiers statiques
+    // Fichiers statiques (CSS, images…)
     mux.Handle("/stylecss/", http.StripPrefix("/stylecss/", http.FileServer(http.Dir("stylecss"))))
 
     return mux
 }
+
+
 

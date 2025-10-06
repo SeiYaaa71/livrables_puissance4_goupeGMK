@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -7,17 +6,17 @@
   <link rel="stylesheet" href="/stylecss/plus.css">
 </head>
 <body>
-  <!-- Barre unique -->
+  <!-- Barre de navigation -->
   <header class="top-bar">
     <div class="left">
-      <nav aria-label="Navigation principale">
+      <nav>
         <a href="/">Accueil</a>
         <a href="/about">À propos</a>
         <a href="/contact">Contact</a>
       </nav>
     </div>
 
-    <div class="center" aria-live="polite">
+    <div class="center">
       <h1>{{ .Title }}</h1>
       {{if eq .Winner 0}}
         <span class="message">{{ .Message }}</span>
