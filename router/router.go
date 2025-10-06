@@ -39,6 +39,28 @@ func New() *http.ServeMux {
         tmpl.Execute(w, data)
     })
 
+    // Page À propos
+    mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+        tmpl := template.Must(
+            template.New("about.html").ParseFiles("template/about.html"),
+        )
+        data := map[string]interface{}{
+            "Title": "À propos",
+        }
+        tmpl.Execute(w, data)
+    })
+
+    // Page Contact
+    mux.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+        tmpl := template.Must(
+            template.New("contact.html").ParseFiles("template/contact.html"),
+        )
+        data := map[string]interface{}{
+            "Title": "Contact",
+        }
+        tmpl.Execute(w, data)
+    })
+
     // Route pour jouer un coup
     mux.HandleFunc("/play", func(w http.ResponseWriter, r *http.Request) {
         colStr := r.URL.Query().Get("col")
@@ -62,6 +84,7 @@ func New() *http.ServeMux {
 
     return mux
 }
+
 
 
 

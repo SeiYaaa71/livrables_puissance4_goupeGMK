@@ -4,41 +4,62 @@
   <meta charset="UTF-8">
   <title>{{ .Title }}</title>
   <link rel="stylesheet" href="/stylecss/plus.css">
+  <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+
+  <!-- Fond bleu sobre -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #f5f7fb;
+      background: linear-gradient(90deg, #0d1b2a, #1b2d4a, #0d1b2a);
+      background-attachment: fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+  </style>
 </head>
 <body>
   <!-- Barre de navigation -->
-  <header class="top-bar">
+  <header class="topbar">
     <div class="left">
-      <nav>
-        <a href="/">Accueil</a>
-        <a href="/about">À propos</a>
-        <a href="/contact">Contact</a>
+      <nav class="nav">
+        <a href="/" class="active">🏠 Accueil</a>
+        <a href="/about">ℹ️ À propos</a>
+        <a href="/contact">📩 Contact</a>
       </nav>
     </div>
-
-    <div class="center">
-      <h1>{{ .Title }}</h1>
-      {{if eq .Winner 0}}
-        <span class="message">{{ .Message }}</span>
-        <div class="turn-big">Tour du joueur : {{ .Current }}</div>
-      {{else}}
-        <span class="win">🎉 Joueur {{ .Winner }} a gagné !</span>
-      {{end}}
-    </div>
-
     <div class="right">
       <form action="/reset" method="post">
-        <button type="submit">🔄 Nouvelle partie</button>
+        <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
       </form>
     </div>
   </header>
+
+  <!-- Statut du jeu -->
+  <section class="status">
+    <h1>🔴{{ .Title }}🟡</h1>
+    {{if eq .Winner 0}}
+      <div class="turn">
+        {{if eq .Current 1}}
+          🔴 Tour du joueur 1 🔴
+        {{else}}
+          🟡 Tour du joueur 2 🟡 
+        {{end}}
+      </div>
+    {{else}}
+      <p class="win">🎉 Joueur {{ .Winner }} a gagné ! 🏆</p>
+    {{end}}
+  </section>
 
   <main>
     <!-- Flèches alignées avec les colonnes -->
     <div class="controls">
       {{range $col := seq 0 6}}
         <a href="/play?col={{$col}}">
-          <button aria-label="Jouer dans la colonne {{$col}}">↓</button>
+          <button aria-label="Jouer dans la colonne {{$col}}">⬇️</button>
         </a>
       {{end}}
     </div>

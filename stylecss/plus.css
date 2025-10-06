@@ -1,15 +1,18 @@
-/* Fond global inspiré de l’image */
+/* --- Fond global --- */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #f5f7fb;
-
-  background: radial-gradient(1200px 600px at 20% 0%, #0a3d73 0%, #062a50 40%, #041d39 70%, #041a33 100%);
+  background: linear-gradient(180deg, #0a3d73 0%, #062a50 40%, #041d39 70%, #041a33 100%);
+  background-attachment: fixed;
+  background-size: cover;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* Cercles décoratifs flous (rouge/jaune/bleu) */
-body::before, body::after {
+/* --- Halos décoratifs bleus (subtils) --- */
+body::before,
+body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -19,28 +22,25 @@ body::before, body::after {
 
 body::before {
   background:
-    radial-gradient(200px 200px at 10% 15%, rgba(255, 0, 0, 0.18), transparent 60%),
-    radial-gradient(220px 220px at 85% 20%, rgba(255, 215, 0, 0.18), transparent 60%),
-    radial-gradient(260px 260px at 25% 85%, rgba(0, 140, 255, 0.18), transparent 60%),
-    radial-gradient(240px 240px at 75% 80%, rgba(255, 0, 0, 0.14), transparent 60%);
-  filter: blur(10px);
+    radial-gradient(300px 300px at 20% 20%, rgba(0, 140, 255, 0.12), transparent 70%),
+    radial-gradient(400px 400px at 80% 30%, rgba(45, 121, 255, 0.10), transparent 70%);
+  filter: blur(60px);
 }
 
 body::after {
   background:
-    radial-gradient(180px 180px at 35% 60%, rgba(255, 215, 0, 0.16), transparent 60%),
-    radial-gradient(220px 220px at 65% 65%, rgba(0, 140, 255, 0.16), transparent 60%);
-  filter: blur(12px);
+    radial-gradient(350px 350px at 40% 75%, rgba(0, 100, 255, 0.10), transparent 70%);
+  filter: blur(80px);
 }
 
-/* Layout */
+/* --- Container --- */
 .container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 24px;
 }
 
-/* Top bar */
+/* --- Top bar --- */
 .topbar {
   position: sticky;
   top: 0;
@@ -48,33 +48,43 @@ body::after {
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
-  background: rgba(5, 29, 59, 0.6);
+  background: rgba(5, 29, 59, 0.7);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  z-index: 10;
 }
 
+/* --- Navigation --- */
 .nav a {
+  position: relative;
   color: #e7ecf7;
   text-decoration: none;
   font-weight: 600;
   margin-right: 16px;
   padding: 6px 10px;
-  border-radius: 8px;
-  transition: background 0.2s ease, color 0.2s ease;
+  border-radius: 6px;
+  transition: color 0.2s ease;
 }
-
-.nav a:hover {
-  background: rgba(255,255,255,0.12);
-  color: #fff;
+.nav a:hover { color: #fff; }
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: #2d79ff;
+  transition: width 0.3s ease;
 }
+.nav a:hover::after,
+.nav a.active::after { width: 100%; }
 
-/* Status (titre/messages) */
+/* --- Status (titre/messages) --- */
 .status {
   text-align: center;
-  margin: 24px auto 16px auto;
+  margin: 40px auto 20px auto;
 }
-
 .status h1 {
   margin: 0 0 6px 0;
   font-size: 2rem;
@@ -82,28 +92,22 @@ body::after {
   color: #ffffff;
   text-shadow: 0 2px 10px rgba(0,0,0,0.4);
 }
-
-.status .subtitle {
-  margin: 0;
-  color: #cfe2ff;
-}
-
+.status .subtitle { color: #cfe2ff; }
 .status .turn {
-  margin: 6px 0 0 0;
+  margin-top: 6px;
   font-weight: 600;
-  color: #ffea86;
+  color: #ffffff;
 }
 
-/* Controls (flèches) */
+/* --- Controls (flèches) --- */
 .controls {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   justify-content: center;
   margin: 18px auto 20px auto;
-  width: 560px; /* aligné avec le plateau */
+  width: 560px;
 }
-
 .controls button {
   width: 100%;
   font-size: 1.2rem;
@@ -116,70 +120,28 @@ body::after {
   cursor: pointer;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
-
 .controls button:hover {
   transform: translateY(-2px);
   filter: brightness(1.05);
 }
 
-/* Board */
+/* --- Plateau --- */
 .board {
   display: grid;
   grid-template-rows: repeat(6, auto);
   gap: 10px;
   margin: 0 auto 40px auto;
-
-  width: 560px; /* 7 cols * (70px + 10px gap) - dernier gap compensé visuellement */
+  width: 560px;
   padding: 20px;
   border-radius: 16px;
   background: linear-gradient(145deg, #1d5fb3, #0f4591);
   box-shadow: 0 12px 30px rgba(0,0,0,0.35);
 }
-
 .row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
 }
-
-<<<<<<< HEAD
-/* Ligne de contrôle (flèches) */
-.controls {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-  justify-content: center;
-  margin: 100px auto 20px auto;
-  width: fit-content;
-}
-
-.controls button,
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  background: #eee;
-  transition: background 0.2s ease;
-}
-
-.controls button {
-  font-size: 1.5rem;
-  padding: 27.5px;
-}
-
-button {
-  padding: 8px 12px;
-  font-size: 1.2rem;
-}
-
-button:hover,
-.controls button:hover {
-  background: #ccc;
-}
-
-/* Cases */
-=======
->>>>>>> 9b458773eb8ddccea3ec5a49a8696c08b6c5162b
 .cell {
   width: 70px;
   height: 70px;
@@ -189,20 +151,19 @@ button:hover,
               inset 0 0 10px rgba(0,0,0,0.75);
 }
 
-/* Tokens */
+/* --- Jetons --- */
 .player1 {
   background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
   box-shadow: inset 0 0 10px rgba(255,255,255,0.4),
               inset 0 0 15px rgba(0,0,0,0.8);
 }
-
 .player2 {
   background: radial-gradient(circle at 30% 30%, #ffff99, #e6c200);
   box-shadow: inset 0 0 10px rgba(255,255,255,0.4),
               inset 0 0 15px rgba(0,0,0,0.8);
 }
 
-/* Buttons */
+/* --- Boutons généraux --- */
 .btn.primary {
   background: linear-gradient(180deg, #2d79ff, #1b5ed6);
   color: #fff;
@@ -214,7 +175,6 @@ button:hover,
   cursor: pointer;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
-
 .btn.primary:hover {
   transform: translateY(-2px);
   filter: brightness(1.08);
