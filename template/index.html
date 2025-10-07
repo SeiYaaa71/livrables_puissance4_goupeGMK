@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
 
-  <!-- Fond bleu sobre -->
   <style>
     body {
       margin: 0;
@@ -19,6 +18,116 @@
       flex-direction: column;
       min-height: 100vh;
     }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 120px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    /* --- ALIGNEMENT DES FLÈCHES ET DU PLATEAU --- */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 5px; /* même espacement que les cellules */
+      margin-bottom: 10px;
+    }
+
+    .controls button {
+      width: 60px;            /* même largeur qu’une cellule */
+      height: 40px;
+      border-radius: 8px;
+      background: #2b4c7e;
+      color: #f5f7fb;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .controls button:hover {
+      background: #3b6aa0;
+      transform: translateY(2px);
+    }
+
+    /* --- TABLEAU DE SCORES --- */
+    .scoreboard {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px 30px;
+      text-align: center;
+      width: 260px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      height: fit-content;
+      transform: translate(80px, 100px);
+    }
+
+    .scoreboard h2 {
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 8px;
+    }
+
+    .scoreboard table {
+      border-collapse: collapse;
+      width: 100%;
+      color: #fff;
+    }
+
+    .scoreboard th, .scoreboard td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .scoreboard th {
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .scoreboard .player-red {
+      color: #ff4d4d;
+      font-weight: bold;
+    }
+
+    .scoreboard .player-yellow {
+      color: #ffeb3b;
+      font-weight: bold;
+    }
+
+    /* --- PLATEAU DE JEU --- */
+    .board {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+      background-color: #0d2970;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .row {
+      display: flex;
+      gap: 5px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #1b263b;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.6);
+    }
+
+    .player1 { background-color: #ff4d4d; }
+    .player2 { background-color: #ffeb3b; }
   </style>
 </head>
 <body>
@@ -55,32 +164,50 @@
   </section>
 
   <main>
-    <!-- Flèches alignées avec les colonnes -->
-    <div class="controls">
-      {{range $col := seq 0 6}}
-        <a href="/play?col={{$col}}">
-          <button aria-label="Jouer dans la colonne {{$col}}">⬇️</button>
-        </a>
-      {{end}}
+    <div>
+      <!-- Flèches alignées avec les colonnes -->
+      <div class="controls">
+        {{range $col := seq 0 6}}
+          <a href="/play?col={{$col}}">
+            <button aria-label="Jouer dans la colonne {{$col}}">⬇️</button>
+          </a>
+        {{end}}
+      </div>
+
+      <!-- Plateau -->
+      <div class="board">
+        {{range $row := .Grid}}
+          <div class="row">
+            {{range $cell := $row}}
+              <div class="cell player{{$cell}}"></div>
+            {{end}}
+          </div>
+        {{end}}
+      </div>
     </div>
 
-    <!-- Plateau -->
-    <div class="board">
-      {{range $row := .Grid}}
-        <div class="row">
-          {{range $cell := $row}}
-            <div class="cell player{{$cell}}"></div>
-          {{end}}
-        </div>
-      {{end}}
-    </div>
+    <!-- Tableau des scores à droite -->
+    <section class="scoreboard">
+      <h2>Tableau des scores</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Joueur</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="player-red">🔴 Joueur Rouge</td>
+            <td>{{ .ScoreRed }}</td>
+          </tr>
+          <tr>
+            <td class="player-yellow">🟡 Joueur Jaune</td>
+            <td>{{ .ScoreYellow }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </main>
 </body>
 </html>
-
-
-
-
-
-
-
