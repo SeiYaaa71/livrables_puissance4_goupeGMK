@@ -5,21 +5,24 @@ const (
     Cols = 7
 )
 
+// Scores globaux (cumulés sur toutes les parties)
 var scoreRed int
 var scoreYellow int
+var gamesPlayed int // compteur de parties jouées
+var draws int       // compteur d'égalités
 
 type Game struct {
     Grid    [Rows][Cols]int // 0 = vide, 1 = joueur rouge, 2 = joueur jaune
-    Current int
-    Winner  int
-    ScoreRed int
-    ScoreYellow int
+    Current int             // joueur courant
+    Winner  int             // 0 = pas de gagnant, 1 = rouge, 2 = jaune
 }
 
+// Crée une nouvelle partie
 func NewGame() *Game {
     return &Game{Current: 1}
 }
 
+// Joue un coup dans une colonne
 func (g *Game) Play(col int) bool {
     if col < 0 || col >= Cols || g.Winner != 0 {
         return false
@@ -30,12 +33,19 @@ func (g *Game) Play(col int) bool {
             g.Grid[row][col] = g.Current
             if g.checkWin(row, col) {
                 g.Winner = g.Current
+                gamesPlayed++ // ✅ incrémente le compteur de parties
                 if g.Winner == 1 {
                     scoreRed++
                 } else if g.Winner == 2 {
                     scoreYellow++
                 }
+            } else if g.isBoardFull() {
+                // ✅ si la grille est pleine et pas de gagnant → égalité
+                g.Winner = 0
+                gamesPlayed++
+                draws++
             } else {
+                // changement de joueur
                 if g.Current == 1 {
                     g.Current = 2
                 } else {
@@ -48,6 +58,7 @@ func (g *Game) Play(col int) bool {
     return false
 }
 
+// Vérifie si le coup est gagnant
 func (g *Game) checkWin(row, col int) bool {
     player := g.Grid[row][col]
     if player == 0 {
@@ -55,7 +66,10 @@ func (g *Game) checkWin(row, col int) bool {
     }
 
     directions := [][2]int{
-        {0, 1}, {1, 0}, {1, 1}, {1, -1},
+        {0, 1},  // horizontal
+        {1, 0},  // vertical
+        {1, 1},  // diagonale ↘
+        {1, -1}, // diagonale ↙
     }
 
     for _, d := range directions {
@@ -69,6 +83,7 @@ func (g *Game) checkWin(row, col int) bool {
     return false
 }
 
+// Compte les pions alignés dans une direction
 func (g *Game) countDir(r, c, dr, dc, player int) int {
     count := 0
     for {
@@ -85,6 +100,17 @@ func (g *Game) countDir(r, c, dr, dc, player int) int {
     return count
 }
 
+// Vérifie si la grille est pleine
+func (g *Game) isBoardFull() bool {
+    for c := 0; c < Cols; c++ {
+        if g.Grid[0][c] == 0 {
+            return false
+        }
+    }
+    return true
+}
+
+// Réinitialise la grille mais garde les scores
 func (g *Game) Reset() {
     for r := 0; r < Rows; r++ {
         for c := 0; c < Cols; c++ {
@@ -95,11 +121,16 @@ func (g *Game) Reset() {
     g.Winner = 0
 }
 
-func GetScores() (int, int) {
-    return scoreRed, scoreYellow
+// Retourne les scores globaux
+func GetScores() (int, int, int, int) {
+    return scoreRed, scoreYellow, gamesPlayed, draws
 }
 
+// Réinitialise les scores
 func ResetScores() {
     scoreRed = 0
     scoreYellow = 0
+    gamesPlayed = 0
+    draws = 0
 }
+

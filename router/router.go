@@ -29,13 +29,22 @@ func New() *http.ServeMux {
         tmpl := template.Must(
             template.New("index.html").Funcs(funcMap).ParseFiles("template/index.html"),
         )
+
+        // Récupère les scores globaux
+        red, yellow, games, draws := game.GetScores()
+
         data := map[string]interface{}{
-            "Title":   "Puissance 4",
-            "Message": "Bienvenue sur le jeu !",
-            "Grid":    currentGame.Grid,
-            "Current": currentGame.Current,
-            "Winner":  currentGame.Winner,
+            "Title":       "Puissance 4",
+            "Message":     "Bienvenue sur le jeu !",
+            "Grid":        currentGame.Grid,
+            "Current":     currentGame.Current,
+            "Winner":      currentGame.Winner,
+            "ScoreRed":    red,
+            "ScoreYellow": yellow,
+            "GamesPlayed": games,
+            "Draws":       draws,
         }
+
         tmpl.Execute(w, data)
     })
 
@@ -71,10 +80,19 @@ func New() *http.ServeMux {
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })
 
-    // Route pour reset
+    // Route pour reset (nouvelle partie mais garde les scores)
     mux.HandleFunc("/reset", func(w http.ResponseWriter, r *http.Request) {
         if r.Method == http.MethodPost {
             currentGame.Reset()
+        }
+        http.Redirect(w, r, "/", http.StatusSeeOther)
+    })
+
+    // ✅ Nouvelle route pour reset complet (scores + parties + égalités)
+    mux.HandleFunc("/resetall", func(w http.ResponseWriter, r *http.Request) {
+        if r.Method == http.MethodPost {
+            currentGame.Reset()
+            game.ResetScores()
         }
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })

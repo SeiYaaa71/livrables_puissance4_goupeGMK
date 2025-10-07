@@ -1,63 +1,115 @@
-package main
+package game
 
-import (
-    "html/template"
-    "net/http"
-    "strconv"
-
-    "power4/game"
+const (
+    Rows = 6
+    Cols = 7
 )
 
-var tmpl = template.Must(template.ParseFiles("templates/index.html"))
-var currentGame = game.NewGame()
+var scoreRed int
+var scoreYellow int
 
-func main() {
-    http.HandleFunc("/", homeHandler)
-    http.HandleFunc("/play", playHandler)
-    http.HandleFunc("/reset", resetHandler)
-    http.HandleFunc("/resetall", resetAllHandler)
-
-    http.ListenAndServe(":8080", nil)
+type Game struct {
+    Grid    [Rows][Cols]int // 0 = vide, 1 = joueur rouge, 2 = joueur jaune
+    Current int
+    Winner  int
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-    w.Header().Set("Pragma", "no-cache")
-    w.Header().Set("Expires", "0")
+// Crée une nouvelle partie
+func NewGame() *Game {
+    return &Game{Current: 1}
+}
 
-    red, yellow := game.GetScores()
-    data := struct {
-        Title       string
-        Grid        [game.Rows][game.Cols]int
-        Current     int
-        Winner      int
-        ScoreRed    int
-        ScoreYellow int
-    }{
-        Title:       "Puissance 4",
-        Grid:        currentGame.Grid,
-        Current:     currentGame.Current,
-        Winner:      currentGame.Winner,
-        ScoreRed:    red,
-        ScoreYellow: yellow,
+// Joue un coup dans la colonne donnée
+func (g *Game) Play(col int) bool {
+    if col < 0 || col >= Cols || g.Winner != 0 {
+        return false
     }
 
-    tmpl.Execute(w, data)
+    for row := Rows - 1; row >= 0; row-- {
+        if g.Grid[row][col] == 0 {
+            g.Grid[row][col] = g.Current
+            if g.checkWin(row, col) {
+                g.Winner = g.Current
+                // ✅ Incrémentation du score directement ici
+                if g.Winner == 1 {
+                    scoreRed++
+                } else if g.Winner == 2 {
+                    scoreYellow++
+                }
+            } else {
+                // Changement de joueur
+                if g.Current == 1 {
+                    g.Current = 2
+                } else {
+                    g.Current = 1
+                }
+            }
+            return true
+        }
+    }
+    return false
 }
 
-func playHandler(w http.ResponseWriter, r *http.Request) {
-    col, _ := strconv.Atoi(r.URL.Query().Get("col"))
-    currentGame.Play(col)
-    http.Redirect(w, r, "/", http.StatusSeeOther)
+// Vérifie si le coup joué est gagnant
+func (g *Game) checkWin(row, col int) bool {
+    player := g.Grid[row][col]
+    if player == 0 {
+        return false
+    }
+
+    directions := [][2]int{
+        {0, 1},  // horizontal
+        {1, 0},  // vertical
+        {1, 1},  // diagonale ↘
+        {1, -1}, // diagonale ↙
+    }
+
+    for _, d := range directions {
+        count := 1
+        count += g.countDir(row, col, d[0], d[1], player)
+        count += g.countDir(row, col, -d[0], -d[1], player)
+        if count >= 4 {
+            return true
+        }
+    }
+    return false
 }
 
-func resetHandler(w http.ResponseWriter, r *http.Request) {
-    currentGame.Reset()
-    http.Redirect(w, r, "/", http.StatusSeeOther)
+// Compte les pions alignés dans une direction donnée
+func (g *Game) countDir(r, c, dr, dc, player int) int {
+    count := 0
+    for {
+        r += dr
+        c += dc
+        if r < 0 || r >= Rows || c < 0 || c >= Cols {
+            break
+        }
+        if g.Grid[r][c] != player {
+            break
+        }
+        count++
+    }
+    return count
 }
 
-func resetAllHandler(w http.ResponseWriter, r *http.Request) {
-    currentGame.Reset()
-    game.ResetScores()
-    http.Redirect(w, r, "/", http.StatusSeeOther)
+// Réinitialise la grille mais garde les scores
+func (g *Game) Reset() {
+    for r := 0; r < Rows; r++ {
+        for c := 0; c < Cols; c++ {
+            g.Grid[r][c] = 0
+        }
+    }
+    g.Current = 1
+    g.Winner = 0
+}
+
+// Retourne les scores globaux
+func GetScores() (int, int) {
+    return scoreRed, scoreYellow
+}
+
+// Réinitialise les scores
+func ResetScores() {
+    scoreRed = 0
+    scoreYellow = 0
 }

@@ -5,7 +5,6 @@
   <title>{{ .Title }}</title>
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
-
   <style>
     body {
       margin: 0;
@@ -18,7 +17,6 @@
       flex-direction: column;
       min-height: 100vh;
     }
-
     main {
       display: flex;
       justify-content: center;
@@ -27,17 +25,14 @@
       margin-top: 30px;
       flex-wrap: wrap;
     }
-
-    /* --- ALIGNEMENT DES FLÈCHES ET DU PLATEAU --- */
     .controls {
       display: flex;
       justify-content: center;
-      gap: 5px; /* même espacement que les cellules */
+      gap: 5px;
       margin-bottom: 10px;
     }
-
     .controls button {
-      width: 60px;            /* même largeur qu’une cellule */
+      width: 60px;
       height: 40px;
       border-radius: 8px;
       background: #2b4c7e;
@@ -47,13 +42,10 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
     }
-
     .controls button:hover {
       background: #3b6aa0;
       transform: translateY(2px);
     }
-
-    /* --- TABLEAU DE SCORES --- */
     .scoreboard {
       background-color: rgba(255, 255, 255, 0.08);
       border-radius: 12px;
@@ -64,7 +56,6 @@
       height: fit-content;
       transform: translate(80px, 100px);
     }
-
     .scoreboard h2 {
       margin-bottom: 12px;
       font-size: 1.3rem;
@@ -73,35 +64,28 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.3);
       padding-bottom: 8px;
     }
-
     .scoreboard table {
       border-collapse: collapse;
       width: 100%;
       color: #fff;
     }
-
     .scoreboard th, .scoreboard td {
       padding: 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
-
     .scoreboard th {
       text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 1px;
     }
-
     .scoreboard .player-red {
       color: #ff4d4d;
       font-weight: bold;
     }
-
     .scoreboard .player-yellow {
       color: #ffeb3b;
       font-weight: bold;
     }
-
-    /* --- PLATEAU DE JEU --- */
     .board {
       display: flex;
       flex-direction: column;
@@ -112,12 +96,10 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.4);
     }
-
     .row {
       display: flex;
       gap: 5px;
     }
-
     .cell {
       width: 60px;
       height: 60px;
@@ -125,7 +107,6 @@
       background-color: #1b263b;
       box-shadow: inset 0 0 5px rgba(0,0,0,0.6);
     }
-
     .player1 { background-color: #ff4d4d; }
     .player2 { background-color: #ffeb3b; }
   </style>
@@ -151,13 +132,17 @@
   <section class="status">
     <h1>🔴{{ .Title }}🟡</h1>
     {{if eq .Winner 0}}
-      <div class="turn">
-        {{if eq .Current 1}}
-          🔴 Tour du joueur 1 🔴
-        {{else}}
-          🟡 Tour du joueur 2 🟡 
-        {{end}}
-      </div>
+      {{if gt .Draws 0}}
+        <p class="win">🤝 Match nul ! Personne ne gagne cette fois.</p>
+      {{else}}
+        <div class="turn">
+          {{if eq .Current 1}}
+            🔴 Tour du joueur 1 🔴
+          {{else}}
+            🟡 Tour du joueur 2 🟡 
+          {{end}}
+        </div>
+      {{end}}
     {{else}}
       <p class="win">🎉 Joueur {{ .Winner }} a gagné ! 🏆</p>
     {{end}}
@@ -204,6 +189,12 @@
           <tr>
             <td class="player-yellow">🟡 Joueur Jaune</td>
             <td>{{ .ScoreYellow }}</td>
+          </tr>
+          <tr>
+            <td colspan="2">🎮 Parties jouées : {{ .GamesPlayed }}</td>
+          </tr>
+          <tr>
+            <td colspan="2">🤝 Matchs nuls : {{ .Draws }}</td>
           </tr>
         </tbody>
       </table>
