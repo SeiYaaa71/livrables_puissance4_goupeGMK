@@ -13,12 +13,19 @@ type PageData struct {
     Grid    [game.Rows][game.Cols]int
     Current int
     Winner  int
+    Stats   game.Stats // ✅ Ajout des scores globaux
 }
 
-// Fonction utilitaire
+// Fonction utilitaire pour rendre un template
 func RenderTemplate(w http.ResponseWriter, filename string, data PageData) {
-    tmpl := template.Must(template.ParseFiles("template/" + filename))
-    tmpl.Execute(w, data)
+    tmpl, err := template.ParseFiles("template/" + filename)
+    if err != nil {
+        http.Error(w, "Erreur template : "+err.Error(), http.StatusInternalServerError)
+        return
+    }
+    if err := tmpl.Execute(w, data); err != nil {
+        http.Error(w, "Erreur exécution template : "+err.Error(), http.StatusInternalServerError)
+    }
 }
 
 // About
@@ -26,6 +33,7 @@ func About(w http.ResponseWriter, r *http.Request) {
     data := PageData{
         Title:   "À propos",
         Message: "Ceci est la page À propos ✨",
+        Stats:   game.GetScores(), // ✅ On passe aussi les scores
     }
     RenderTemplate(w, "about.html", data)
 }
@@ -38,6 +46,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
         data := PageData{
             Title:   "Contact",
             Message: "Merci " + name + " pour ton message : " + msg,
+            Stats:   game.GetScores(),
         }
         RenderTemplate(w, "contact.html", data)
         return
@@ -45,6 +54,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
     data := PageData{
         Title:   "Contact",
         Message: "Envoie-nous un message 📩",
+        Stats:   game.GetScores(),
     }
     RenderTemplate(w, "contact.html", data)
 }

@@ -3,17 +3,32 @@ package router
 import (
     "html/template"
     "net/http"
+    "sort"
     "strconv"
-    "power4/game" // correspond au module défini dans go.mod
+
+    "power4/game"
 )
 
 var currentGame = game.NewGame()
+var lastMessage string // message du dernier coup
+
+// cellClass traduit 0/1/2 en classes CSS
+func cellClass(v int) string {
+    switch v {
+    case 1:
+        return "player1"
+    case 2:
+        return "player2"
+    default:
+        return ""
+    }
+}
 
 // New retourne un ServeMux avec toutes les routes configurées
 func New() *http.ServeMux {
     mux := http.NewServeMux()
 
-    // Fonction utilitaire seq pour générer les colonnes (0 → 6)
+    // Fonctions utilitaires pour les templates
     funcMap := template.FuncMap{
         "seq": func(start, end int) []int {
             s := make([]int, end-start+1)
@@ -22,27 +37,43 @@ func New() *http.ServeMux {
             }
             return s
         },
+        "add":       func(a, b int) int { return a + b },
+        "cellClass": cellClass,
     }
 
-    // Page d'accueil
+    // Page d'accueil (jeu)
     mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         tmpl := template.Must(
             template.New("index.html").Funcs(funcMap).ParseFiles("template/index.html"),
         )
 
-        // Récupère les scores globaux
-        red, yellow, games, draws := game.GetScores()
+        stats := game.GetScores()
+
+        type Player struct {
+            Name  string
+            Icon  string
+            Score int
+            Class string
+        }
+        players := []Player{
+            {Name: "Joueur Rouge", Icon: "🔴", Score: stats.Red, Class: "player-red"},
+            {Name: "Joueur Jaune", Icon: "🟡", Score: stats.Yellow, Class: "player-yellow"},
+        }
+        sort.Slice(players, func(i, j int) bool {
+            return players[i].Score > players[j].Score
+        })
 
         data := map[string]interface{}{
             "Title":       "Puissance 4",
-            "Message":     "Bienvenue sur le jeu !",
+            "Message":     lastMessage,
             "Grid":        currentGame.Grid,
             "Current":     currentGame.Current,
             "Winner":      currentGame.Winner,
-            "ScoreRed":    red,
-            "ScoreYellow": yellow,
-            "GamesPlayed": games,
-            "Draws":       draws,
+            "ScoreRed":    stats.Red,
+            "ScoreYellow": stats.Yellow,
+            "GamesPlayed": stats.Games,
+            "Draws":       stats.Draws,
+            "Players":     players,
         }
 
         tmpl.Execute(w, data)
@@ -50,22 +81,40 @@ func New() *http.ServeMux {
 
     // Page À propos
     mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
-        tmpl := template.Must(
-            template.New("about.html").ParseFiles("template/about.html"),
-        )
-        data := map[string]interface{}{
-            "Title": "À propos",
-        }
-        tmpl.Execute(w, data)
+        tmpl := template.Must(template.ParseFiles("template/about.html"))
+        tmpl.Execute(w, map[string]interface{}{"Title": "À propos"})
     })
 
     // Page Contact
     mux.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+        tmpl := template.Must(template.ParseFiles("template/contact.html"))
+        tmpl.Execute(w, map[string]interface{}{"Title": "Contact"})
+    })
+
+    // Page Tableau des scores
+    mux.HandleFunc("/tableau", func(w http.ResponseWriter, r *http.Request) {
         tmpl := template.Must(
-            template.New("contact.html").ParseFiles("template/contact.html"),
+            template.New("tableau.html").Funcs(funcMap).ParseFiles("template/tableau.html"),
         )
+
+        stats := game.GetScores()
+        type Player struct {
+            Name  string
+            Icon  string
+            Score int
+            Class string
+        }
+        players := []Player{
+            {Name: "Joueur Rouge", Icon: "🔴", Score: stats.Red, Class: "player-red"},
+            {Name: "Joueur Jaune", Icon: "🟡", Score: stats.Yellow, Class: "player-yellow"},
+        }
+        sort.Slice(players, func(i, j int) bool {
+            return players[i].Score > players[j].Score
+        })
+
         data := map[string]interface{}{
-            "Title": "Contact",
+            "Title":   "Tableau des scores",
+            "Players": players,
         }
         tmpl.Execute(w, data)
     })
@@ -75,34 +124,36 @@ func New() *http.ServeMux {
         colStr := r.URL.Query().Get("col")
         col, err := strconv.Atoi(colStr)
         if err == nil {
-            currentGame.Play(col)
+            _, msg := currentGame.Play(col)
+            lastMessage = msg
         }
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })
 
-    // Route pour reset (nouvelle partie mais garde les scores)
+    // Reset (nouvelle partie, scores conservés)
     mux.HandleFunc("/reset", func(w http.ResponseWriter, r *http.Request) {
         if r.Method == http.MethodPost {
             currentGame.Reset()
+            lastMessage = "🔄 Nouvelle partie lancée !"
         }
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })
 
-    // ✅ Nouvelle route pour reset complet (scores + parties + égalités)
+    // Reset complet (scores + partie)
     mux.HandleFunc("/resetall", func(w http.ResponseWriter, r *http.Request) {
         if r.Method == http.MethodPost {
             currentGame.Reset()
             game.ResetScores()
+            lastMessage = "🗑️ Scores et parties réinitialisés !"
         }
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })
 
     // Fichiers statiques (CSS, images…)
     mux.Handle("/stylecss/", http.StripPrefix("/stylecss/", http.FileServer(http.Dir("stylecss"))))
+    mux.Handle("/image/", http.StripPrefix("/image/", http.FileServer(http.Dir("image"))))
 
     return mux
 }
-
-
 
 

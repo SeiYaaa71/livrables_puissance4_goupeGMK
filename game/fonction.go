@@ -1,15 +1,25 @@
 package game
 
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
 const (
     Rows = 6
     Cols = 7
 )
 
-// Scores globaux (cumulés sur toutes les parties)
-var scoreRed int
-var scoreYellow int
-var gamesPlayed int // compteur de parties jouées
-var draws int       // compteur d'égalités
+// Stats globales (cumulées sur toutes les parties)
+type Stats struct {
+    Red    int
+    Yellow int
+    Games  int
+    Draws  int
+}
+
+var GlobalStats Stats
 
 type Game struct {
     Grid    [Rows][Cols]int // 0 = vide, 1 = joueur rouge, 2 = joueur jaune
@@ -17,48 +27,92 @@ type Game struct {
     Winner  int             // 0 = pas de gagnant, 1 = rouge, 2 = jaune
 }
 
-// Crée une nouvelle partie
+
+// Liste de messages d’encouragement
+var encouragements = []string{
+    "💡 Belle tentative, continue comme ça !",
+    "🔥 La partie s’échauffe, ne lâche rien !",
+    "🎯 Stratégie intéressante, à toi de jouer !",
+    "💪 Tu peux le faire, concentre-toi !",
+    "⚡ Beau coup, la tension monte !",
+    "🚀 Tu prends de la vitesse, continue !",
+    "🌟 Impressionnant, quel sens du jeu !",
+    "🧠 Belle réflexion, ça se voit que tu anticipes !",
+    "🏹 Tu vises juste, garde le cap !",
+    "🎶 Le rythme est bon, ne t’arrête pas !",
+    "🔥 Tu mets la pression, bien joué !",
+    "💥 Coup puissant, ça change la partie !",
+    "🌈 Quelle créativité, bravo !",
+    "🕹️ Tu joues comme un pro !",
+    "⚔️ La bataille est serrée, tiens bon !",
+    "🏆 Tu te rapproches de la victoire !",
+    "🎉 Super mouvement, ça va payer !",
+    "🌀 Tu crées la surprise, excellent !",
+    "🧩 Ton coup s’emboîte parfaitement !",
+    "🌍 Toute la salle retient son souffle !",
+    "✨ Tu brilles sur ce coup !",
+    "📈 Ta stratégie monte en puissance !",
+    "💎 Coup précieux, bien trouvé !",
+    "🔮 On dirait que tu vois l’avenir !",
+}
+
+
+// Nouvelle partie
 func NewGame() *Game {
+    rand.Seed(time.Now().UnixNano())
     return &Game{Current: 1}
 }
 
-// Joue un coup dans une colonne
-func (g *Game) Play(col int) bool {
+// Change de joueur
+func (g *Game) switchPlayer() {
+    if g.Current == 1 {
+        g.Current = 2
+    } else {
+        g.Current = 1
+    }
+}
+
+// Joue un coup et retourne un message
+func (g *Game) Play(col int) (bool, string) {
     if col < 0 || col >= Cols || g.Winner != 0 {
-        return false
+        return false, "❌ Coup invalide"
     }
 
     for row := Rows - 1; row >= 0; row-- {
         if g.Grid[row][col] == 0 {
             g.Grid[row][col] = g.Current
+
+            // Vérifie victoire
             if g.checkWin(row, col) {
                 g.Winner = g.Current
-                gamesPlayed++ // ✅ incrémente le compteur de parties
+                GlobalStats.Games++
                 if g.Winner == 1 {
-                    scoreRed++
-                } else if g.Winner == 2 {
-                    scoreYellow++
-                }
-            } else if g.isBoardFull() {
-                // ✅ si la grille est pleine et pas de gagnant → égalité
-                g.Winner = 0
-                gamesPlayed++
-                draws++
-            } else {
-                // changement de joueur
-                if g.Current == 1 {
-                    g.Current = 2
+                    GlobalStats.Red++
                 } else {
-                    g.Current = 1
+                    GlobalStats.Yellow++
                 }
+                return true, fmt.Sprintf("🎉 Joueur %d a gagné ! 🏆", g.Winner)
             }
-            return true
+
+            // Vérifie égalité
+            if g.isBoardFull() {
+                GlobalStats.Games++
+                GlobalStats.Draws++
+                return true, "🤝 Match nul !"
+            }
+
+            // Sinon, on change de joueur
+            g.switchPlayer()
+
+            // Tirer un message d’encouragement aléatoire
+            msg := encouragements[rand.Intn(len(encouragements))]
+            return true, msg
         }
     }
-    return false
+    return false, "⚠️ Colonne pleine"
 }
 
-// Vérifie si le coup est gagnant
+// Vérifie si le coup joué est gagnant
 func (g *Game) checkWin(row, col int) bool {
     player := g.Grid[row][col]
     if player == 0 {
@@ -83,7 +137,7 @@ func (g *Game) checkWin(row, col int) bool {
     return false
 }
 
-// Compte les pions alignés dans une direction
+// Compte les pions alignés dans une direction donnée
 func (g *Game) countDir(r, c, dr, dc, player int) int {
     count := 0
     for {
@@ -122,15 +176,14 @@ func (g *Game) Reset() {
 }
 
 // Retourne les scores globaux
-func GetScores() (int, int, int, int) {
-    return scoreRed, scoreYellow, gamesPlayed, draws
+func GetScores() Stats {
+    return GlobalStats
 }
 
 // Réinitialise les scores
 func ResetScores() {
-    scoreRed = 0
-    scoreYellow = 0
-    gamesPlayed = 0
-    draws = 0
+    GlobalStats = Stats{}
 }
+
+
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/stylecss/plus.css">
+  <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+  <style>
+    /* Style pour le texte statique dans la nav */
+    .nav-static {
+      color: #e7ecf7;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: default; /* curseur normal */
+    }
+    .nav-static:hover {
+      color: inherit;
+      cursor: default;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Barre de navigation -->
+  <header class="topbar">
+    <div class="left">
+      <nav class="nav">
+        <a href="/">🏠 Accueil</a>
+        <a href="/about">ℹ️ À propos</a>
+        <a href="/contact">📩 Contact</a>
+        <!-- Lien actif remplacé par un span statique -->
+        <span class="nav-static">📊 Tableau des scores</span>
+      </nav>
+    </div>
+    <div class="right">
+      <form action="/reset" method="post" style="display:inline;">
+        <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
+      </form>
+      <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
+        <button type="submit" class="btn danger">🗑️ Reset scores</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- Contenu principal -->
+  <main class="content">
+    <div class="scoreboard-base scoreboard-ranking">
+      <h2>Tableau des scores 🏆</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Joueur</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Players}}
+          <tr class="{{.Class}}">
+            <td class="player-name">{{.Icon}} {{.Name}}</td>
+            <td class="player-score">{{.Score}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
+

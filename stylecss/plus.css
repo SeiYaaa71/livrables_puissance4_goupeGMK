@@ -1,182 +1,538 @@
-/* --- Fond global --- */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #f5f7fb;
-  background: linear-gradient(180deg, #0a3d73 0%, #062a50 40%, #041d39 70%, #041a33 100%);
+  background: linear-gradient(180deg,#0a3d73 0%,#062a50 40%,#041d39 70%,#041a33 100%);
   background-attachment: fixed;
   background-size: cover;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-/* --- Halos décoratifs bleus (subtils) --- */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-}
-
-body::before {
-  background:
-    radial-gradient(300px 300px at 20% 20%, rgba(0, 140, 255, 0.12), transparent 70%),
-    radial-gradient(400px 400px at 80% 30%, rgba(45, 121, 255, 0.10), transparent 70%);
-  filter: blur(60px);
-}
-
-body::after {
-  background:
-    radial-gradient(350px 350px at 40% 75%, rgba(0, 100, 255, 0.10), transparent 70%);
-  filter: blur(80px);
-}
-
-/* --- Container --- */
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-/* --- Top bar --- */
+/* --- Topbar --- */
 .topbar {
-  position: sticky;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: sticky; top: 0;
+  display: flex; justify-content: space-between; align-items: center;
   padding: 14px 24px;
-  background: rgba(5, 29, 59, 0.7);
+  background: rgba(5,29,59,.85);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-  z-index: 10;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
+  z-index: 100;
 }
-
-/* --- Navigation --- */
+.nav { display: flex; gap: 20px; }
 .nav a {
   position: relative;
   color: #e7ecf7;
   text-decoration: none;
   font-weight: 600;
-  margin-right: 16px;
   padding: 6px 10px;
   border-radius: 6px;
-  transition: color 0.2s ease;
+  transition: color .2s;
 }
 .nav a:hover { color: #fff; }
+/* Ligne bleue animée */
 .nav a::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0%;
-  height: 2px;
+  left: 0; bottom: -4px;
+  width: 0; height: 2px;
   background: #2d79ff;
-  transition: width 0.3s ease;
+  transition: width .3s ease;
 }
 .nav a:hover::after,
 .nav a.active::after { width: 100%; }
 
-/* --- Status (titre/messages) --- */
-.status {
-  text-align: center;
-  margin: 40px auto 20px auto;
-}
-.status h1 {
-  margin: 0 0 6px 0;
-  font-size: 2rem;
-  letter-spacing: 0.5px;
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.4);
-}
-.status .subtitle { color: #cfe2ff; }
-.status .turn {
-  margin-top: 6px;
-  font-weight: 600;
-  color: #ffffff;
-}
+.topbar .right { display: flex; align-items: center; gap: 10px; }
 
-/* --- Controls (flèches) --- */
-.controls {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-  justify-content: center;
-  margin: 18px auto 20px auto;
-  width: 560px;
-}
-.controls button {
-  width: 100%;
-  font-size: 1.2rem;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  color: #133a6b;
-  background: linear-gradient(180deg, #eaf0f9, #dbe6f7);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+/* --- Boutons --- */
+.btn {
+  color: #fff; font-weight: 700;
+  border: none; border-radius: 8px;
+  padding: 10px 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition: transform .15s, filter .15s;
 }
-.controls button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-}
-
-/* --- Plateau --- */
-.board {
-  display: grid;
-  grid-template-rows: repeat(6, auto);
-  gap: 10px;
-  margin: 0 auto 40px auto;
-  width: 560px;
-  padding: 20px;
-  border-radius: 16px;
-  background: linear-gradient(145deg, #1d5fb3, #0f4591);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-}
-.row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-}
-.cell {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: inset 0 0 16px rgba(255,255,255,0.35),
-              inset 0 0 10px rgba(0,0,0,0.75);
-}
-
-/* --- Jetons --- */
-.player1 {
-  background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000);
-  box-shadow: inset 0 0 10px rgba(255,255,255,0.4),
-              inset 0 0 15px rgba(0,0,0,0.8);
-}
-.player2 {
-  background: radial-gradient(circle at 30% 30%, #ffff99, #e6c200);
-  box-shadow: inset 0 0 10px rgba(255,255,255,0.4),
-              inset 0 0 15px rgba(0,0,0,0.8);
-}
-
-/* --- Boutons généraux --- */
-.btn.primary {
-  background: linear-gradient(180deg, #2d79ff, #1b5ed6);
-  color: #fff;
-  font-weight: 700;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-  cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-.btn.primary:hover {
+.btn:hover {
   transform: translateY(-2px);
   filter: brightness(1.08);
 }
+.btn.primary { background: linear-gradient(180deg,#2d79ff,#1b5ed6); }
+.btn.danger  { background: linear-gradient(180deg,#ff4d4d,#cc0000); }
+
+/* --- Layout --- */
+main.content,
+main.game {
+  flex: 1;
+  display: flex; justify-content: center; align-items: center;
+}
+main.content { padding: 100px 20px; }
+
+.game-layout {
+  display: flex; justify-content: center; align-items: center;
+  gap: 35px; width: 100%; max-width: 1200px; margin: 0 auto;
+}
+.board-area { display: flex; flex-direction: column; align-items: center; }
+
+/* --- Plateau --- */
+.controls {
+  display: flex; justify-content: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.controls button {
+  width: 97px; height: 60px;
+  border-radius: 12px;
+  background: linear-gradient(180deg,#2d79ff,#1b5ed6);
+  color: #fff; font-weight: 700; font-size: 2rem;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+  cursor: pointer;
+  transition: transform .15s, filter .15s;
+}
+.controls button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.board {
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+  background: #0d2970;
+  padding: 25px; border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0,0,0,.6);
+}
+.row { display: flex; gap: 10px; }
+.cell {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: #1b263b;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.7);
+}
+.player1,
+.player2 {
+  box-shadow: inset 0 0 12px rgba(255,255,255,.4),
+              inset 0 0 20px rgba(0,0,0,.8);
+}
+.player1 {
+  background: radial-gradient(circle at 30% 30%,#ff6666,#cc0000);
+}
+.player2 {
+  background: radial-gradient(circle at 30% 30%,#ffff99,#e6c200);
+}
+
+/* --- Scoreboards --- */
+.scoreboard-base {
+  background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
+  border-radius: 16px; padding: 30px;
+  box-shadow: 0 0 30px rgba(0,0,0,.7);
+  border: 1px solid rgba(77,163,255,.35);
+  color: #e6f0ff;
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+}
+.scoreboard-base h2 {
+  font-size: 1.6rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: #4da3ff;
+  margin: 0; padding-bottom: 0;
+  text-align: center;
+}
+.scoreboard-base table {
+  width: 100%; border-collapse: collapse; text-align: center; margin: 0;
+}
+.scoreboard-base th, .scoreboard-base td {
+  padding: 14px; font-size: 1.15rem; font-weight: 500;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+}
+.scoreboard-base th {
+  text-transform: uppercase; font-size: 1rem; letter-spacing: .6px; color: #aecdff;
+}
+.scoreboard-base .player-red .player-name { color: #ff4d4d; font-weight: 700; }
+.scoreboard-base .player-yellow .player-name { color: #ffeb3b; font-weight: 700; }
+.scoreboard-base .player-score { font-weight: 700; font-size: 1.25rem; }
+
+/* Variante accueil (scores de partie) */
+.scoreboard-game {
+  width: 480px; height: 480px;
+  justify-content: flex-start;
+  transform: translateY(30px);
+  font-size: 1.2rem;
+}
+.scoreboard-game h2 { font-size: 1.8rem; }
+.scoreboard-game th, .scoreboard-game td { font-size: 1.2rem; padding: 16px; }
+.scoreboard-game .player-score { font-size: 1.3rem; }
+
+/* Variante classement global */
+.scoreboard-ranking {
+  width: 500px; height: auto;
+  justify-content: center; margin-top: 20px;
+  font-size: 1.25rem;
+}
+.scoreboard-ranking h2 { font-size: 2rem; }
+.scoreboard-ranking th, .scoreboard-ranking td { font-size: 1.3rem; padding: 18px; }
+.scoreboard-ranking .player-score { font-size: 1.4rem; }
+
+.about-table {
+  width: 95%;              /* encore plus large */
+  max-width: 1000px;       /* limite confortable */
+  margin: 40px auto;       /* espace autour du tableau */
+  border-collapse: collapse;
+  background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
+  border: 2px solid rgba(77,163,255,.45);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,.75);
+  font-size: 1.35rem;      /* texte global légèrement plus grand */
+}
+
+.about-table th,
+.about-table td {
+  padding: 28px 30px;      /* plus de marge interne */
+  border-bottom: 1px solid rgba(255,255,255,.2);
+  vertical-align: top;     /* texte aligné en haut pour plus de lisibilité */
+}
+
+.about-table th {
+  width: 26%;
+  font-weight: 800;
+  color: #4da3ff;
+  text-transform: uppercase;
+  letter-spacing: .9px;
+  font-size: 1.5rem;       /* titres plus gros */
+}
+
+.about-table td {
+  color: #e6f0ff;
+  line-height: 1.8;        /* plus d’espace entre les lignes */
+  font-size: 1.35rem;
+}
+
+.about-table tr:last-child th,
+.about-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Tables génériques (About + Contact) --- */
+.styled-table {
+  width: 95%;
+  max-width: 1000px;
+  margin: 40px auto;
+  border-collapse: collapse;
+  background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
+  border: 2px solid rgba(77,163,255,.45);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,.75);
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,.2);
+  vertical-align: top;
+}
+
+.styled-table th {
+  width: 26%;
+  font-weight: 800;
+  color: #4da3ff;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+
+.styled-table td {
+  color: #e6f0ff;
+  line-height: 1.6;
+}
+
+.styled-table tr:last-child th,
+.styled-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- About table (hérite de styled-table) --- */
+.about-table {
+  font-size: 1.35rem;
+}
+.about-table th { font-size: 1.5rem; }
+.about-table td { font-size: 1.35rem; line-height: 1.8; }
+
+/* --- Colonne des labels (Pseudo, Email, Message) --- */
+.contact-table th {
+  font-size: 1.4rem;
+  width: 25%;              /* largeur équilibrée */
+  text-align: left;        /* labels alignés à gauche */
+  padding: 24px 20px;      /* espace vertical + petit espace à droite */
+  color: #4da3ff;
+}
+
+/* --- Colonne des champs --- */
+.contact-table td {
+  font-size: 1.2rem;
+  width: 75%;              /* complète la largeur */
+  padding: 24px 30px;      /* cohérent avec les th */
+}
+
+/* --- Champs de formulaire --- */
+.contact-table input[type="text"],
+.contact-table input[type="email"],
+.contact-table textarea {
+  width: 90;               /* pas collé aux bords */
+  margin: 0 auto;
+  display: block;
+  padding: 16px 20px;
+  font-size: 1.1rem;
+  color: #e6f0ff;
+  background: linear-gradient(180deg, rgba(18,34,70,.9), rgba(12,26,58,.9));
+  border: 1px solid rgba(77,163,255,.35);
+  border-radius: 12px;
+  outline: none;
+  box-shadow: inset 0 0 10px rgba(0,0,0,.55);
+  transition: border-color .2s, box-shadow .2s, filter .2s;
+}
+
+.contact-table textarea {
+  resize: vertical;
+  min-height: 160px;
+}
+
+/* --- Focus sur champs --- */
+.contact-table input:focus,
+.contact-table textarea:focus {
+  border-color: #2d79ff;
+  box-shadow:
+    0 0 0 3px rgba(45,121,255,.25),
+    inset 0 0 12px rgba(0,0,0,.55);
+  filter: brightness(1.08);
+}
+
+
+
+/* --- Hover doux sur les lignes --- */
+.styled-table tbody tr:hover {
+  background: linear-gradient(180deg, rgba(24,46,90,.95), rgba(14,30,66,.95));
+  transition: background .25s ease; /* ajout d'une transition fluide */
+}
+
+/* --- Responsive --- */
+@media (max-width: 700px) {
+  .styled-table,
+  .styled-table tbody,
+  .styled-table tr,
+  .styled-table th,
+  .styled-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .styled-table tr {
+    margin-bottom: 22px; /* un peu plus d'air entre les blocs */
+    border-bottom: 2px solid rgba(255,255,255,.15);
+    padding-bottom: 12px; /* espace interne pour respirer */
+  }
+
+  .styled-table th {
+    margin-bottom: 10px;
+    font-size: 1.15rem;
+    color: #4da3ff; /* garde la cohérence bleue même en mobile */
+  }
+
+  .styled-table td {
+    font-size: 1.1rem;
+    padding-top: 0;
+  }
+}
+
+/* --- Sous-titre des pages (About, Contact, etc.) --- */
+.subtitle {
+  margin: 0 auto 50px auto; /* encore plus d’espace sous le texte */
+  max-width: 900px;         /* un peu plus large */
+  display: block;
+  font-size: 1.35rem;       /* texte plus grand */
+  color: #aecdff;
+  text-align: center;
+  line-height: 1.7;         /* plus d’air entre les lignes */
+}
+
+/* --- Neutralise le lien actif "Contact" --- */
+.nav a.active {
+  color: #e7ecf7 !important;
+  cursor: default !important;
+  pointer-events: none;           /* bloque clic + hover */
+  text-decoration: none !important;
+}
+
+/* --- Titres statiques (Contact, About, Scoreboard) --- */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  color: #4da3ff;
+  font-weight: 700;
+  cursor: default;
+  pointer-events: none;           /* empêche toute interaction */
+  text-decoration: none;
+}
+.title:hover {
+  color: inherit;
+  cursor: default;
+  text-decoration: none;
+}
+
+/* Exception : dans la topbar (navigation), on garde l'interaction */
+.topbar .title {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* --- Sous-titre neutre (optionnel) --- */
+.no-hover {
+  text-align: center;
+  font-size: 1.3rem;              /* même taille que td */
+  font-style: italic;
+  padding-bottom: 20px;
+  cursor: default;
+  pointer-events: none;
+}
+.no-hover:hover {
+  color: inherit !important;
+  cursor: default !important;
+  text-decoration: none !important;
+}
+
+/* --- Tableau Contact élargi et horizontal --- */
+.contact-table {
+  font-size: 1.35rem;
+  margin: 60px auto 0;
+  width: 98%;
+  max-width: 1500px;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+.contact-table th,
+.contact-table td {
+  padding: 32px 40px;
+}
+
+.contact-table th {
+  font-size: 1.45rem;
+  width: 22%;
+  text-align: right;
+  color: #4da3ff;
+}
+
+.contact-table td {
+  font-size: 1.3rem;
+  width: 78%;
+}
+
+/* --- Champs du formulaire Contact --- */
+.contact-table input[type="text"],
+.contact-table input[type="email"],
+.contact-table textarea {
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+  padding: 20px 24px;
+  font-size: 1.2rem;
+  color: #e6f0ff;
+  background: linear-gradient(180deg, rgba(18,34,70,.9), rgba(12,26,58,.9));
+  border: 1px solid rgba(77,163,255,.35);
+  border-radius: 14px;
+  outline: none;
+  box-shadow: inset 0 0 14px rgba(0,0,0,.55);
+  transition: border-color .2s, box-shadow .2s, filter .2s;
+}
+
+.contact-table textarea {
+  resize: vertical;
+  min-height: 200px;
+}
+
+.contact-table input:focus,
+.contact-table textarea:focus {
+  border-color: #2d79ff;
+  box-shadow:
+    0 0 0 4px rgba(45,121,255,.25),
+    inset 0 0 16px rgba(0,0,0,.55);
+  filter: brightness(1.08);
+}
+
+.contact-table th,
+.contact-table td {
+  text-align: center;      /* centre horizontalement */
+  vertical-align: middle;  /* centre verticalement */
+}
+
+.welcome-message h1 {
+  position: relative;
+  top: -50px; /* valeur négative = vers le haut */
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #4da3ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(34, 111, 194, 0.6);
+  margin-top: -100px;
+}
+
+
+/* Animation d’apparition */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style du message de jeu (encouragements, victoire, etc.) */
+.game-message {
+  text-align: center;
+  font-size: 1.6rem;            /* texte plus grand */
+  font-weight: bold;
+  margin-top: 20px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  color: #fff;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Animation d’apparition */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- Supprime les lignes dans TOUS les tableaux --- */
+.styled-table th,
+.styled-table td,
+.about-table th,
+.about-table td,
+.contact-table th,
+.contact-table td,
+.scoreboard-base th,
+.scoreboard-base td,
+.scoreboard-game th,
+.scoreboard-game td,
+.scoreboard-ranking th,
+.scoreboard-ranking td {
+  border-bottom: none !important;
+}
+
+
+
+
+
+
+
+
+
+
 

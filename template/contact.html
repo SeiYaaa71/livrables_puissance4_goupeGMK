@@ -1,56 +1,97 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ .Title }}</title>
-    <link rel="stylesheet" href="/stylecss/plus1.css">
-    <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+  <meta charset="UTF-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/stylecss/plus.css">
+  <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+  <style>
+    .nav a.active {
+      color: #e7ecf7 !important;
+      cursor: default !important;
+      pointer-events: none;      
+      text-decoration: none !important;
+    }
+
+    .contact-table .title {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #4da3ff;
+      font-weight: 600;
+      cursor: default;
+    }
+    .contact-table .title:hover {
+      color: inherit;
+      cursor: default;
+      text-decoration: none;
+    }
+
+    /* Sous-titre (neutre, sans interaction) */
+    .contact-table .no-hover {
+      text-align: center;
+      font-style: italic;
+      padding-bottom: 20px;
+      cursor: default;
+    }
+    .contact-table .no-hover:hover {
+      color: inherit !important;
+      cursor: default !important;
+      text-decoration: none !important;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
-    <!-- Barre de navigation -->
-    <header class="topbar">
-        <div class="left">
-            <nav class="nav">
-                <a href="/">🏠 Accueil</a>
-                <a href="/about">ℹ️ À propos</a>
-                <a href="/contact" class="active">📩 Contact</a>
-            </nav>
-        </div>
-        <div class="right">
-            <form action="/reset" method="post">
-                <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
-            </form>
-        </div>
-    </header>
+  <!-- Barre de navigation -->
+  <header class="topbar">
+    <div class="left">
+      <nav class="nav">
+        <a href="/">🏠 Accueil</a>
+        <a href="/about">ℹ️ À propos</a>
+        <a href="/contact" class="active">📩 Contact</a>
+        <a href="/tableau">📊 Tableau des scores</a>
+      </nav>
+    </div>
+    <div class="right">
+      <form action="/reset" method="post" style="display:inline;">
+        <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
+      </form>
+      <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
+        <button type="submit" class="btn danger">🗑️ Reset scores</button>
+      </form>
+    </div>
+  </header>
 
-    <!-- Contenu principal -->
-    <main class="content">
-        <div class="card">
-            <h1>{{ .Title }}</h1>
-            <p class="subtitle">N'hésitez pas à me laisser un message via ce formulaire 😊</p>
-
-            <form method="post" action="/contact" class="contact-form">
-                <div>
-                    <label for="name">Pseudo :</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-
-                <div>
-                    <label for="email">Adresse email :</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <div>
-                    <label for="msg">Message :</label>
-                    <textarea id="msg" name="msg" required></textarea>
-                </div>
-
-                <button type="submit" class="btn primary">Envoyer</button>
-            </form>
-        </div>
-    </main>
+  <!-- Contenu principal -->
+  <main class="content">
+    <div class="card">
+      <table class="styled-table contact-table">
+        <tbody>
+          <tr>
+            <th colspan="2" class="title">📩 {{ .Title }}</th>
+          </tr>
+          <tr>
+            <td colspan="2" class="no-hover">N’hésite pas à me laisser un message 😊</td>
+          </tr>
+          <tr>
+            <th><label for="name">Pseudo :</label></th>
+            <td><input type="text" id="name" name="name" required></td>
+          </tr>
+          <tr>
+            <th><label for="email">Email :</label></th>
+            <td><input type="email" id="email" name="email" required></td>
+          </tr>
+          <tr>
+            <th><label for="msg">Message :</label></th>
+            <td><textarea id="msg" name="msg" rows="6" required></textarea></td>
+          </tr>
+          <tr>
+            <th></th>
+            <td><button type="submit" class="btn primary">Envoyer</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 </body>
 </html>
-
-
-

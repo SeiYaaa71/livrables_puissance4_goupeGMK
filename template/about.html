@@ -5,6 +5,34 @@
   <title>{{ .Title }}</title>
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+  <style>
+    /* Texte statique dans la nav */
+    .nav-static {
+      color: #e7ecf7;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: default;
+    }
+    .nav-static:hover {
+      color: inherit;
+      cursor: default;
+      text-decoration: none;
+    }
+
+    /* Titre principal */
+    .title {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #4da3ff;
+      cursor: default;
+    }
+    .title:hover {
+      color: inherit;
+      cursor: default;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
   <!-- Barre de navigation -->
@@ -12,57 +40,62 @@
     <div class="left">
       <nav class="nav">
         <a href="/">🏠 Accueil</a>
-        <a href="/about" class="active">ℹ️ À propos</a>
+        <!-- Lien actif remplacé par un span statique -->
+        <span class="nav-static">ℹ️ À propos</span>
         <a href="/contact">📩 Contact</a>
+        <a href="/tableau">📊 Tableau des scores</a>
       </nav>
     </div>
     <div class="right">
-      <form action="/reset" method="post">
+      <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
+      </form>
+      <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
+        <button type="submit" class="btn danger">🗑️ Reset scores</button>
       </form>
     </div>
   </header>
 
   <!-- Contenu principal -->
   <main class="content">
-    <div class="card">
-      <h1>ℹ️ {{ .Title }}</h1>
-      <p class="intro">
-        Bienvenue sur la page <strong>À propos</strong> 🎉
-      </p>
-
-      <section>
-        <h2>🎯 Objectif du projet</h2>
-        <p>
-          Ce projet est une version en ligne du jeu <em>Puissance 4</em>, développée en Go avec des templates HTML/CSS.
-          L’idée est d’apprendre en pratiquant, tout en proposant une interface claire, moderne et interactive.
-        </p>
-      </section>
-
-      <section>
-        <h2>🛠️ Technologies utilisées</h2>
-        <ul>
-          <li>Go (backend et logique du jeu)</li>
-          <li>HTML5 & CSS3 (structure et style)</li>
-          <li>Templates dynamiques pour l’affichage</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>🚀 Pourquoi ce projet ?</h2>
-        <p>
-          L’objectif est double : progresser en développement web et offrir une expérience ludique accessible à tous.
-          C’est un terrain d’expérimentation pour tester des idées, améliorer l’UI/UX et apprendre en continu.
-        </p>
-      </section>
-
-      <section>
-        <h2>📬 Contact</h2>
-        <p>
-          Tu peux utiliser la barre de navigation ci‑dessus pour retourner au jeu, découvrir plus d’infos ou me contacter directement.
-        </p>
-      </section>
-    </div>
+    <table class="about-table">
+      <tbody>
+        <tr>
+          <th colspan="2" class="title">ℹ️ {{ .Title }}</th>
+        </tr>
+        <tr>
+          <th>Présentation</th>
+          <td>
+            Ce projet est une version en ligne du jeu <em>Puissance 4</em>, développée en Go avec des templates HTML/CSS. 
+            L’idée est d’apprendre en pratiquant, tout en proposant une interface claire et moderne.
+          </td>
+        </tr>
+        <tr>
+          <th>🎯 Objectif</th>
+          <td>
+            Offrir une expérience ludique et interactive, tout en servant de support d’apprentissage pour le développement web.
+          </td>
+        </tr>
+        <tr>
+          <th>🛠️ Technologies</th>
+          <td>
+            <ul>
+              <li><strong>Go</strong> — backend et logique du jeu</li>
+              <li><strong>HTML5 & CSS3</strong> — structure et style</li>
+              <li><strong>Templates dynamiques</strong> — rendu côté serveur</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>🚀 Pourquoi ?</th>
+          <td>
+            Progresser en développement web et offrir une expérience accessible à tous. 
+            C’est aussi un terrain d’expérimentation pour tester des idées et améliorer l’UI/UX.
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </main>
 </body>
 </html>
+

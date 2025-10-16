@@ -1,17 +1,26 @@
 package game
 
+import "fmt"
+
 const (
     Rows = 6
     Cols = 7
 )
 
-var scoreRed int
-var scoreYellow int
+// Stats globales (cumulées sur toutes les parties)
+type Stats struct {
+    Red    int
+    Yellow int
+    Games  int
+    Draws  int
+}
+
+var GlobalStats Stats
 
 type Game struct {
     Grid    [Rows][Cols]int // 0 = vide, 1 = joueur rouge, 2 = joueur jaune
-    Current int
-    Winner  int
+    Current int             // joueur courant
+    Winner  int             // 0 = pas de gagnant, 1 = rouge, 2 = jaune
 }
 
 // Crée une nouvelle partie
@@ -19,35 +28,51 @@ func NewGame() *Game {
     return &Game{Current: 1}
 }
 
+// Change de joueur
+func (g *Game) switchPlayer() {
+    if g.Current == 1 {
+        g.Current = 2
+    } else {
+        g.Current = 1
+    }
+}
+
 // Joue un coup dans la colonne donnée
-func (g *Game) Play(col int) bool {
+// Retourne (succès, message)
+func (g *Game) Play(col int) (bool, string) {
     if col < 0 || col >= Cols || g.Winner != 0 {
-        return false
+        return false, "Coup invalide"
     }
 
     for row := Rows - 1; row >= 0; row-- {
         if g.Grid[row][col] == 0 {
             g.Grid[row][col] = g.Current
+
+            // Vérifie victoire
             if g.checkWin(row, col) {
                 g.Winner = g.Current
-                // ✅ Incrémentation du score directement ici
+                GlobalStats.Games++
                 if g.Winner == 1 {
-                    scoreRed++
-                } else if g.Winner == 2 {
-                    scoreYellow++
-                }
-            } else {
-                // Changement de joueur
-                if g.Current == 1 {
-                    g.Current = 2
+                    GlobalStats.Red++
                 } else {
-                    g.Current = 1
+                    GlobalStats.Yellow++
                 }
+                return true, fmt.Sprintf("🎉 Joueur %d a gagné ! 🏆", g.Winner)
             }
-            return true
+
+            // Vérifie égalité
+            if g.isBoardFull() {
+                GlobalStats.Games++
+                GlobalStats.Draws++
+                return true, "🤝 Match nul !"
+            }
+
+            // Sinon, on change de joueur
+            g.switchPlayer()
+            return true, ""
         }
     }
-    return false
+    return false, "Colonne pleine"
 }
 
 // Vérifie si le coup joué est gagnant
@@ -92,6 +117,16 @@ func (g *Game) countDir(r, c, dr, dc, player int) int {
     return count
 }
 
+// Vérifie si la grille est pleine
+func (g *Game) isBoardFull() bool {
+    for c := 0; c < Cols; c++ {
+        if g.Grid[0][c] == 0 {
+            return false
+        }
+    }
+    return true
+}
+
 // Réinitialise la grille mais garde les scores
 func (g *Game) Reset() {
     for r := 0; r < Rows; r++ {
@@ -104,12 +139,11 @@ func (g *Game) Reset() {
 }
 
 // Retourne les scores globaux
-func GetScores() (int, int) {
-    return scoreRed, scoreYellow
+func GetScores() Stats {
+    return GlobalStats
 }
 
 // Réinitialise les scores
 func ResetScores() {
-    scoreRed = 0
-    scoreYellow = 0
+    GlobalStats = Stats{}
 }

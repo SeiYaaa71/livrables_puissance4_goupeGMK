@@ -1,12 +1,16 @@
 package main
 
 import (
+    "context"
     "fmt"
     "log"
     "net/http"
     "os"
     "os/exec"
+    "os/signal"
     "runtime"
+    "syscall"
+    "time"
 
     "power4/router"
 )
@@ -21,50 +25,98 @@ const (
 
 // clearConsole efface la console selon l'OS
 func clearConsole() {
-    switch runtime.GOOS {
-    case "windows":
-        cmd := exec.Command("cmd", "/c", "cls")
-        cmd.Stdout = os.Stdout
-        cmd.Run()
-    default: // linux, mac, etc.
-        cmd := exec.Command("clear")
-        cmd.Stdout = os.Stdout
-        cmd.Run()
+    var cmd *exec.Cmd
+    if runtime.GOOS == "windows" {
+        cmd = exec.Command("cmd", "/c", "cls")
+    } else {
+        cmd = exec.Command("clear")
     }
+    cmd.Stdout = os.Stdout
+    _ = cmd.Run()
 }
 
-// loggingMiddleware affiche uniquement certaines requêtes HTTP
+// loggingMiddleware affiche uniquement les requêtes utiles
 func loggingMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // 👉 On ignore tous les GET
-        if r.Method == http.MethodGet {
+        if next == nil {
+            http.Error(w, "Handler non défini", http.StatusInternalServerError)
+            return
+        }
+
+        // On logge seulement les requêtes utiles
+        if r.Method == http.MethodGet && r.URL.Path != "/play" {
             next.ServeHTTP(w, r)
             return
         }
 
-        // Couleur selon méthode
         methodColor := reset
         switch r.Method {
-        case "POST":
+        case http.MethodGet:
+            methodColor = green
+        case http.MethodPost:
             methodColor = blue
-        case "DELETE":
+        case http.MethodDelete:
             methodColor = red
         }
 
-        fmt.Printf("%s➡️  %s %s%s\n", methodColor, r.Method, r.URL.Path, reset)
+        start := time.Now()
         next.ServeHTTP(w, r)
+        duration := time.Since(start)
+
+        fmt.Printf("%s➡️  %s %s%s (%v)\n", methodColor, r.Method, r.URL.Path, reset, duration)
     })
 }
 
 func main() {
-    // Nettoyage de la console au démarrage
     clearConsole()
 
+    // Port configurable
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+
+    // --- ROUTER PRINCIPAL ---
     mux := router.New()
+
+    // Middleware de log
     loggedMux := loggingMiddleware(mux)
 
-    fmt.Printf("%s🚀 Serveur lancé !🚀%s\n", green, reset)
-    fmt.Printf("%s🌐 http://localhost:8080 🌐%s\n", yellow, reset)
+    // --- SERVEUR ---
+    srv := &http.Server{
+        Addr:         ":" + port,
+        Handler:      loggedMux,
+        ReadTimeout:  10 * time.Second,
+        WriteTimeout: 10 * time.Second,
+        IdleTimeout:  60 * time.Second,
+    }
 
-    log.Fatal(http.ListenAndServe(":8080", loggedMux))
+    fmt.Printf("%s🚀 Serveur lancé ! 🚀%s\n", green, reset)
+    fmt.Printf("%s🌐 http://localhost:%s 🌐%s\n", yellow, port, reset)
+
+    // Lancement serveur
+    go func() {
+        if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+            log.Fatalf("Erreur serveur: %v", err)
+        }
+    }()
+
+    // Gestion arrêt propre
+    quit := make(chan os.Signal, 1)
+    signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+    <-quit
+
+    fmt.Println("\n🛑 Arrêt du serveur en cours...")
+
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
+
+    if err := srv.Shutdown(ctx); err != nil {
+        log.Fatalf("Arrêt forcé: %v", err)
+    }
+
+    fmt.Println("✅ Serveur arrêté proprement")
 }
+
+
+

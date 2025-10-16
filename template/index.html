@@ -3,113 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ .Title }}</title>
+  <!-- Global + Jeu -->
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #f5f7fb;
-      background: linear-gradient(90deg, #0d1b2a, #1b2d4a, #0d1b2a);
-      background-attachment: fixed;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    main {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 120px;
-      margin-top: 30px;
-      flex-wrap: wrap;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      margin-bottom: 10px;
-    }
-    .controls button {
-      width: 60px;
-      height: 40px;
-      border-radius: 8px;
-      background: #2b4c7e;
-      color: #f5f7fb;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .controls button:hover {
-      background: #3b6aa0;
-      transform: translateY(2px);
-    }
-    .scoreboard {
-      background-color: rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px 30px;
-      text-align: center;
-      width: 260px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-      height: fit-content;
-      transform: translate(80px, 100px);
-    }
-    .scoreboard h2 {
-      margin-bottom: 12px;
-      font-size: 1.3rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-      padding-bottom: 8px;
-    }
-    .scoreboard table {
-      border-collapse: collapse;
-      width: 100%;
-      color: #fff;
-    }
-    .scoreboard th, .scoreboard td {
-      padding: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .scoreboard th {
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-    }
-    .scoreboard .player-red {
-      color: #ff4d4d;
-      font-weight: bold;
-    }
-    .scoreboard .player-yellow {
-      color: #ffeb3b;
-      font-weight: bold;
-    }
-    .board {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      align-items: center;
-      background-color: #0d2970;
-      padding: 15px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    }
-    .row {
-      display: flex;
-      gap: 5px;
-    }
-    .cell {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #1b263b;
-      box-shadow: inset 0 0 5px rgba(0,0,0,0.6);
-    }
-    .player1 { background-color: #ff4d4d; }
-    .player2 { background-color: #ffeb3b; }
-  </style>
 </head>
 <body>
   <!-- Barre de navigation -->
@@ -119,86 +15,79 @@
         <a href="/" class="active">🏠 Accueil</a>
         <a href="/about">ℹ️ À propos</a>
         <a href="/contact">📩 Contact</a>
+        <a href="/tableau">📊 Tableau des scores</a>
       </nav>
     </div>
     <div class="right">
-      <form action="/reset" method="post">
+      <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
+      </form>
+      <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
+        <button type="submit" class="btn danger">🗑️ Reset scores</button>
       </form>
     </div>
   </header>
 
-  <!-- Statut du jeu -->
-  <section class="status">
-    <h1>🔴{{ .Title }}🟡</h1>
-    {{if eq .Winner 0}}
-      {{if gt .Draws 0}}
-        <p class="win">🤝 Match nul ! Personne ne gagne cette fois.</p>
-      {{else}}
-        <div class="turn">
-          {{if eq .Current 1}}
-            🔴 Tour du joueur 1 🔴
-          {{else}}
-            🟡 Tour du joueur 2 🟡 
+  <main class="game">
+    <!-- Conteneur horizontal plateau + scoreboard -->
+    <div class="game-layout">
+      
+      <!-- Zone plateau -->
+      <div class="board-area">
+        <!-- Message de bienvenue placé ici -->
+        <section class="welcome-message">
+          <h1>👋 Bienvenue sur notre  🔴Puissance 4🟡 !</h1>
+        </section>
+
+        <!-- Contrôles (boutons pour jouer dans chaque colonne) -->
+        <div class="controls">
+          {{range $i, $col := .Grid}}
+            <form method="post" action="/play?col={{$i}}">
+              <button type="submit">⬇️</button>
+            </form>
           {{end}}
         </div>
-      {{end}}
-    {{else}}
-      <p class="win">🎉 Joueur {{ .Winner }} a gagné ! 🏆</p>
-    {{end}}
-  </section>
 
-  <main>
-    <div>
-      <!-- Flèches alignées avec les colonnes -->
-      <div class="controls">
-        {{range $col := seq 0 6}}
-          <a href="/play?col={{$col}}">
-            <button aria-label="Jouer dans la colonne {{$col}}">⬇️</button>
-          </a>
-        {{end}}
+        <!-- Plateau -->
+        <div class="board">
+          {{range .Grid}}
+            <div class="row">
+              {{range .}}
+                <div class="cell {{cellClass .}}"></div>
+              {{end}}
+            </div>
+          {{end}}
+        </div>
       </div>
 
-      <!-- Plateau -->
-      <div class="board">
-        {{range $row := .Grid}}
-          <div class="row">
-            {{range $cell := $row}}
-              <div class="cell player{{$cell}}"></div>
-            {{end}}
-          </div>
-        {{end}}
-      </div>
+  <aside class="scoreboard-base scoreboard-game">
+  <h2 id="scores-title">Scores</h2>
+  <table aria-labelledby="scores-title">
+    <thead>
+      <tr>
+        <th>Joueur Rouge 🔴</th>
+        <th>Joueur Jaune 🟡</th>
+        <th>Matchs nuls 🤝</th>
+        <th>Total parties 🎮</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="player-red">{{.ScoreRed}}</td>
+        <td class="player-yellow">{{.ScoreYellow}}</td>
+        <td class="draws">{{.Draws}}</td>
+        <td class="games-played">{{.GamesPlayed}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {{if .Message}}
+    <p class="game-message">{{.Message}}</p>
+  {{end}}
+</aside>
     </div>
-
-    <!-- Tableau des scores à droite -->
-    <section class="scoreboard">
-      <h2>Tableau des scores</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Joueur</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="player-red">🔴 Joueur Rouge</td>
-            <td>{{ .ScoreRed }}</td>
-          </tr>
-          <tr>
-            <td class="player-yellow">🟡 Joueur Jaune</td>
-            <td>{{ .ScoreYellow }}</td>
-          </tr>
-          <tr>
-            <td colspan="2">🎮 Parties jouées : {{ .GamesPlayed }}</td>
-          </tr>
-          <tr>
-            <td colspan="2">🤝 Matchs nuls : {{ .Draws }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
   </main>
 </body>
 </html>
+
+
