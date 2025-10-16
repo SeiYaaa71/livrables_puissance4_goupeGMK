@@ -82,7 +82,7 @@ main.content { padding: 100px 20px; }
   margin-bottom: 20px;
 }
 .controls button {
-  width: 97px; height: 60px;
+  width: 90px; height: 75px;
   border-radius: 12px;
   background: linear-gradient(180deg,#2d79ff,#1b5ed6);
   color: #fff; font-weight: 700; font-size: 2rem;
@@ -97,14 +97,14 @@ main.content { padding: 100px 20px; }
 }
 
 .board {
-  display: flex; flex-direction: column; gap: 10px; align-items: center;
+  display: flex; flex-direction: column; gap: 20px; align-items: center;
   background: #0d2970;
-  padding: 25px; border-radius: 20px;
+  padding: 60px; border-radius: 30px;
   box-shadow: 0 0 30px rgba(0,0,0,.6);
 }
 .row { display: flex; gap: 10px; }
 .cell {
-  width: 80px; height: 80px;
+  width: 90px; height: 90px;
   border-radius: 50%;
   background: #1b263b;
   box-shadow: inset 0 0 8px rgba(0,0,0,.7);
@@ -212,17 +212,32 @@ main.content { padding: 100px 20px; }
   border-bottom: none;
 }
 
-/* --- Tables génériques (About + Contact) --- */
+
 .styled-table {
-  width: 95%;
-  max-width: 1000px;
-  margin: 40px auto;
-  border-collapse: collapse;
-  background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
-  border: 2px solid rgba(77,163,255,.45);
-  border-radius: 18px;
+  width: 65%;                 /* un peu moins large */
+  max-width: 1200px;          /* limite raisonnable */
+  margin: 20px auto;          /* marges plus fines */
+  font-size: 1.1rem;          /* texte plus petit */
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 4px;      /* lignes plus serrées */
+
+  background: linear-gradient(180deg, rgba(20, 40, 80, .95), rgba(10, 25, 55, .95));
+  border: 2px solid rgba(77, 163, 255, .45);
+  border-radius: 30px;        /* arrondi plus discret */
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(0,0,0,.75);
+  box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+
+.styled-table th,
+.styled-table td {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;          /* cellules plus compactes */
+  line-height: 1.2;           /* réduit la hauteur du texte */
+  text-align: center;
+  vertical-align: middle;
 }
 
 .styled-table th,
@@ -273,23 +288,7 @@ main.content { padding: 100px 20px; }
   padding: 24px 30px;      /* cohérent avec les th */
 }
 
-/* --- Champs de formulaire --- */
-.contact-table input[type="text"],
-.contact-table input[type="email"],
-.contact-table textarea {
-  width: 90;               /* pas collé aux bords */
-  margin: 0 auto;
-  display: block;
-  padding: 16px 20px;
-  font-size: 1.1rem;
-  color: #e6f0ff;
-  background: linear-gradient(180deg, rgba(18,34,70,.9), rgba(12,26,58,.9));
-  border: 1px solid rgba(77,163,255,.35);
-  border-radius: 12px;
-  outline: none;
-  box-shadow: inset 0 0 10px rgba(0,0,0,.55);
-  transition: border-color .2s, box-shadow .2s, filter .2s;
-}
+
 
 .contact-table textarea {
   resize: vertical;
@@ -314,34 +313,6 @@ main.content { padding: 100px 20px; }
   transition: background .25s ease; /* ajout d'une transition fluide */
 }
 
-/* --- Responsive --- */
-@media (max-width: 700px) {
-  .styled-table,
-  .styled-table tbody,
-  .styled-table tr,
-  .styled-table th,
-  .styled-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .styled-table tr {
-    margin-bottom: 22px; /* un peu plus d'air entre les blocs */
-    border-bottom: 2px solid rgba(255,255,255,.15);
-    padding-bottom: 12px; /* espace interne pour respirer */
-  }
-
-  .styled-table th {
-    margin-bottom: 10px;
-    font-size: 1.15rem;
-    color: #4da3ff; /* garde la cohérence bleue même en mobile */
-  }
-
-  .styled-table td {
-    font-size: 1.1rem;
-    padding-top: 0;
-  }
-}
 
 /* --- Sous-titre des pages (About, Contact, etc.) --- */
 .subtitle {
@@ -399,21 +370,6 @@ main.content { padding: 100px 20px; }
   text-decoration: none !important;
 }
 
-/* --- Tableau Contact élargi et horizontal --- */
-.contact-table {
-  font-size: 1.35rem;
-  margin: 60px auto 0;
-  width: 98%;
-  max-width: 1500px;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0 12px;
-}
-
-.contact-table th,
-.contact-table td {
-  padding: 32px 40px;
-}
 
 .contact-table th {
   font-size: 1.45rem;
@@ -424,7 +380,7 @@ main.content { padding: 100px 20px; }
 
 .contact-table td {
   font-size: 1.3rem;
-  width: 78%;
+  width: 90%;
 }
 
 /* --- Champs du formulaire Contact --- */
@@ -459,17 +415,12 @@ main.content { padding: 100px 20px; }
   filter: brightness(1.08);
 }
 
-.contact-table th,
-.contact-table td {
-  text-align: center;      /* centre horizontalement */
-  vertical-align: middle;  /* centre verticalement */
-}
 
 .welcome-message h1 {
   position: relative;
   top: -50px; /* valeur négative = vers le haut */
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #4da3ff;
   text-transform: uppercase;
@@ -525,6 +476,61 @@ main.content { padding: 100px 20px; }
 .scoreboard-ranking td {
   border-bottom: none !important;
 }
+
+    /* Style pour le texte statique dans la nav */
+    .nav-static {
+      color: #e7ecf7;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: default; /* curseur normal */
+    }
+    .nav-static:hover {
+      color: inherit;
+      cursor: default;
+      text-decoration: none;
+    }
+
+    /* Sous-titre (neutre, sans interaction) */
+    .contact-table .no-hover {
+      text-align: center;
+      font-style: italic;
+      padding-bottom: 20px;
+      cursor: default;
+    }
+    .contact-table .no-hover:hover {
+      color: inherit !important;
+      cursor: default !important;
+      text-decoration: none !important;
+      pointer-events: none;
+    }
+
+/* Écrans Full HD (1080p ~ 1920px) */
+@media (min-width: 1200px) and (max-width: 1920px) {
+  .welcome-message {
+    max-width: 1000px;
+    padding: 30px;
+  }
+
+  .welcome-message h1 {
+    font-size: 2.5rem;
+  }
+
+  .game-layout {
+    gap: 30px;
+  }
+
+  .scoreboard-base {
+    font-size: 1.05rem;
+    padding: 20px;
+  }
+
+  table {
+    font-size: 1rem;
+  }
+}
+
+  
 
 
 

@@ -18,8 +18,6 @@ import (
 const (
     green  = "\033[32m"
     yellow = "\033[33m"
-    blue   = "\033[34m"
-    red    = "\033[31m"
     reset  = "\033[0m"
 )
 
@@ -35,38 +33,6 @@ func clearConsole() {
     _ = cmd.Run()
 }
 
-// loggingMiddleware affiche uniquement les requêtes utiles
-func loggingMiddleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        if next == nil {
-            http.Error(w, "Handler non défini", http.StatusInternalServerError)
-            return
-        }
-
-        // On logge seulement les requêtes utiles
-        if r.Method == http.MethodGet && r.URL.Path != "/play" {
-            next.ServeHTTP(w, r)
-            return
-        }
-
-        methodColor := reset
-        switch r.Method {
-        case http.MethodGet:
-            methodColor = green
-        case http.MethodPost:
-            methodColor = blue
-        case http.MethodDelete:
-            methodColor = red
-        }
-
-        start := time.Now()
-        next.ServeHTTP(w, r)
-        duration := time.Since(start)
-
-        fmt.Printf("%s➡️  %s %s%s (%v)\n", methodColor, r.Method, r.URL.Path, reset, duration)
-    })
-}
-
 func main() {
     clearConsole()
 
@@ -79,18 +45,16 @@ func main() {
     // --- ROUTER PRINCIPAL ---
     mux := router.New()
 
-    // Middleware de log
-    loggedMux := loggingMiddleware(mux)
-
     // --- SERVEUR ---
     srv := &http.Server{
         Addr:         ":" + port,
-        Handler:      loggedMux,
+        Handler:      mux, // plus de middleware de log
         ReadTimeout:  10 * time.Second,
         WriteTimeout: 10 * time.Second,
         IdleTimeout:  60 * time.Second,
     }
 
+    // Messages colorés de lancement
     fmt.Printf("%s🚀 Serveur lancé ! 🚀%s\n", green, reset)
     fmt.Printf("%s🌐 http://localhost:%s 🌐%s\n", yellow, port, reset)
 
@@ -117,6 +81,5 @@ func main() {
 
     fmt.Println("✅ Serveur arrêté proprement")
 }
-
 
 

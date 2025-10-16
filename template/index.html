@@ -40,13 +40,14 @@
         </section>
 
         <!-- Contrôles (boutons pour jouer dans chaque colonne) -->
-        <div class="controls">
-          {{range $i, $col := .Grid}}
-            <form method="post" action="/play?col={{$i}}">
-              <button type="submit">⬇️</button>
-            </form>
-          {{end}}
-        </div>
+ <div class="controls">
+  {{range $i, $cell := index .Grid 0}}
+    <form method="post" action="/play?col={{$i}}">
+      <button type="submit">⬇️</button>
+    </form>
+  {{end}}
+</div>
+
 
         <!-- Plateau -->
         <div class="board">
