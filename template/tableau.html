@@ -5,7 +5,6 @@
   <title>{{ .Title }}</title>
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
-  
 </head>
 <body>
   <!-- Barre de navigation -->
@@ -15,11 +14,13 @@
         <a href="/">🏠 Accueil</a>
         <a href="/about">ℹ️ À propos</a>
         <a href="/contact">📩 Contact</a>
-        <!-- Lien actif remplacé par un span statique -->
-        <span class="nav-static">📊 Tableau des scores</span>
+        <a href="/tableau" aria-current="page">📊 Tableau des scores</a>
       </nav>
     </div>
     <div class="right">
+      <form action="/reset" method="post" style="display:inline;" onsubmit="localStorage.removeItem('gameStarted')">
+        <button type="submit" class="btn primary">🔙 Retour au Menu</button>
+      </form>  
       <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
       </form>
@@ -53,4 +54,5 @@
   </main>
 </body>
 </html>
+
 

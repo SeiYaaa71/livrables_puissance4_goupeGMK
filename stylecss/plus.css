@@ -153,7 +153,7 @@ main.content { padding: 100px 20px; }
 
 /* Variante accueil (scores de partie) */
 .scoreboard-game {
-  width: 480px; height: 480px;
+  width: 480px; height: 650px;
   justify-content: flex-start;
   transform: translateY(30px);
   font-size: 1.2rem;
@@ -491,13 +491,7 @@ main.content { padding: 100px 20px; }
       text-decoration: none;
     }
 
-    /* Sous-titre (neutre, sans interaction) */
-    .contact-table .no-hover {
-      text-align: center;
-      font-style: italic;
-      padding-bottom: 20px;
-      cursor: default;
-    }
+    
     .contact-table .no-hover:hover {
       color: inherit !important;
       cursor: default !important;
@@ -528,4 +522,66 @@ main.content { padding: 100px 20px; }
   table {
     font-size: 1rem;
   }
+}
+
+#tesseract-container {
+  width: 250px;
+  height: 250px;
+  margin: 20px auto;
+  background: #0a0a0a; /* fond sombre pour contraste */
+  border: 2px solid #2d79ff;
+  border-radius: 8px;
+
+  /* Glow externe + interne façon néon */
+  box-shadow:
+    0 0 12px rgba(45,121,255,.6),
+    inset 0 0 16px rgba(0,0,0,.55);
+
+  /* Transition douce si tu veux animer le hover */
+  transition: all 0.3s ease;
+}
+
+#tesseract-container:hover {
+  filter: brightness(1.1);
+  box-shadow:
+    0 0 20px rgba(45,121,255,.9),
+    inset 0 0 20px rgba(45,121,255,.4);
+}
+
+.nav a {
+  position: relative;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 0;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #2d79ff;
+  transition: width .3s ease;
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+/* Lien actif (page courante) */
+.nav a[aria-current="page"]::after {
+  width: 100%;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.contact-table {
+  overflow: hidden;
+  position: relative;
 }

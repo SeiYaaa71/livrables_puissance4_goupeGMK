@@ -149,9 +149,10 @@ func New() *http.ServeMux {
         http.Redirect(w, r, "/", http.StatusSeeOther)
     })
 
-    // Fichiers statiques (CSS, images…)
+    // === FICHIERS STATIQUES ===
     mux.Handle("/stylecss/", http.StripPrefix("/stylecss/", http.FileServer(http.Dir("stylecss"))))
-    mux.Handle("/image/", http.StripPrefix("/image/", http.FileServer(http.Dir("image"))))
+    mux.Handle("/image/",    http.StripPrefix("/image/",    http.FileServer(http.Dir("image"))))
+    mux.Handle("/js/",       http.StripPrefix("/js/",       http.FileServer(http.Dir("static/js")))) // ✅ ajout pour tesseract.js
 
     return mux
 }

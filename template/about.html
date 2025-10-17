@@ -6,20 +6,6 @@
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
   <style>
-    /* Texte statique dans la nav */
-    .nav-static {
-      color: #e7ecf7;
-      font-weight: 600;
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: default;
-    }
-    .nav-static:hover {
-      color: inherit;
-      cursor: default;
-      text-decoration: none;
-    }
-
     /* Titre principal */
     .title {
       text-align: center;
@@ -40,13 +26,15 @@
     <div class="left">
       <nav class="nav">
         <a href="/">🏠 Accueil</a>
-        <!-- Lien actif remplacé par un span statique -->
-        <span class="nav-static">ℹ️ À propos</span>
+        <a href="/about" aria-current="page">ℹ️ À propos</a>
         <a href="/contact">📩 Contact</a>
         <a href="/tableau">📊 Tableau des scores</a>
       </nav>
     </div>
     <div class="right">
+      <form action="/reset" method="post" style="display:inline;" onsubmit="localStorage.removeItem('gameStarted')">
+        <button type="submit" class="btn primary">🔙 Retour au Menu</button>
+      </form>
       <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
       </form>
@@ -98,4 +86,3 @@
   </main>
 </body>
 </html>
-

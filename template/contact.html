@@ -5,22 +5,6 @@
   <title>{{ .Title }}</title>
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
-  <style>
-
-    /* Sous-titre (neutre, sans interaction) */
-    .contact-table .no-hover {
-      text-align: center;
-      font-style: italic;
-      padding-bottom: 20px;
-      cursor: default;
-    }
-    .contact-table .no-hover:hover {
-      color: inherit !important;
-      cursor: default !important;
-      text-decoration: none !important;
-      pointer-events: none;
-    }
-  </style>
 </head>
 <body>
   <!-- Barre de navigation -->
@@ -29,11 +13,14 @@
       <nav class="nav">
         <a href="/">🏠 Accueil</a>
         <a href="/about">ℹ️ À propos</a>
-        <a href="/contact" class="active">📩 Contact</a>
+        <a href="/contact" aria-current="page">📩 Contact</a>
         <a href="/tableau">📊 Tableau des scores</a>
       </nav>
     </div>
     <div class="right">
+      <form action="/reset" method="post" style="display:inline;" onsubmit="localStorage.removeItem('gameStarted')">
+        <button type="submit" class="btn primary">🔙 Retour au Menu</button>
+      </form>
       <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
       </form>

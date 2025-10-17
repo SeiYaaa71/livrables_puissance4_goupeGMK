@@ -7,7 +7,6 @@
   <!-- Feuilles de style -->
   <link rel="stylesheet" href="/stylecss/plus.css">
   <link rel="stylesheet" href="/stylecss/menu.css">
-
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
 </head>
 <body>
@@ -23,19 +22,22 @@
   <header class="topbar">
     <div class="left">
       <nav class="nav">
-        <a href="/" class="active">🏠 Accueil</a>
+        <a href="/" aria-current="page">🏠 Accueil</a>
         <a href="/about">ℹ️ À propos</a>
         <a href="/contact">📩 Contact</a>
         <a href="/tableau">📊 Tableau des scores</a>
       </nav>
     </div>
     <div class="right">
-      <form action="/reset" method="post" style="display:inline;" onsubmit="localStorage.removeItem('gameStarted')">
-      <button type="submit" class="btn primary">🔙 Retour au Menu</button>
-      </form>
+      <!-- Retour au menu (JS, pas de reload) -->
+      <button type="button" id="back-to-menu" class="btn primary">🔙 Retour au Menu</button>
+
+      <!-- Nouvelle partie (reload serveur) -->
       <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
       </form>
+
+      <!-- Reset scores -->
       <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
         <button type="submit" class="btn danger">🗑️ Reset scores</button>
       </form>
@@ -97,38 +99,52 @@
         {{if .Message}}
           <p class="game-message">{{.Message}}</p>
         {{end}}
+
+        <!-- Conteneur du tesseract -->
+        <div id="tesseract-container"></div>
       </aside>
     </div>
   </main>
 
   <!-- === SCRIPT MENU === -->
-  <script>
+<script>
   const menu = document.getElementById('menu');
   const playBtn = document.getElementById('play-btn');
   const game = document.getElementById('game');
+  const backBtn = document.getElementById('back-to-menu');
 
-  // Vérifie si le joueur a déjà lancé le jeu
+  // Vérifie l'état sauvegardé
   const hasStarted = localStorage.getItem('gameStarted');
-
   if (hasStarted === 'true') {
-    // Masquer le menu et afficher directement le jeu
     menu.classList.add('hidden');
     game.classList.add('active');
   }
 
+  // Jouer → cache le menu et affiche le jeu
   playBtn.addEventListener('click', () => {
     menu.classList.add('hidden');
     setTimeout(() => {
       game.classList.add('active');
     }, 800);
-
-    // On enregistre que le joueur a commencé une fois
-    localStorage.setItem('gameStarted', 'true');
+    localStorage.setItem('gameStarted', 'true'); // mémorise l'état
   });
 
+  // Retour au menu → réaffiche le menu
+  backBtn.addEventListener('click', () => {
+    game.classList.remove('active');
+    menu.classList.remove('hidden');
+    localStorage.removeItem('gameStarted'); // efface l'état
+  });
+
+  // Règles
   document.getElementById('rules-btn').addEventListener('click', () => {
     alert("🎯 Objectif : alignez 4 jetons de votre couleur (rouge ou jaune) à l'horizontale, verticale ou diagonale !");
   });
 </script>
+
+
+  <!-- === SCRIPTS === -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="/js/tesseract.js"></script>
 </body>
 </html>
