@@ -3,12 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ .Title }}</title>
-  <!-- Global + Jeu -->
+
+  <!-- Feuilles de style -->
   <link rel="stylesheet" href="/stylecss/plus.css">
+  <link rel="stylesheet" href="/stylecss/menu.css">
+
   <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
 </head>
 <body>
-  <!-- Barre de navigation -->
+
+  <!-- === MENU D’ACCUEIL === -->
+  <div id="menu">
+    <h1>🔴 Puissance 4 🟡</h1>
+    <button class="menu-btn" id="play-btn">Jouer</button>
+    <button class="menu-btn" id="rules-btn">Règles</button>
+  </div>
+
+  <!-- === Barre de navigation === -->
   <header class="topbar">
     <div class="left">
       <nav class="nav">
@@ -19,6 +30,9 @@
       </nav>
     </div>
     <div class="right">
+      <form action="/reset" method="post" style="display:inline;" onsubmit="localStorage.removeItem('gameStarted')">
+      <button type="submit" class="btn primary">🔙 Retour au Menu</button>
+      </form>
       <form action="/reset" method="post" style="display:inline;">
         <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
       </form>
@@ -28,26 +42,23 @@
     </div>
   </header>
 
-  <main class="game">
-    <!-- Conteneur horizontal plateau + scoreboard -->
+  <!-- === CONTENU DU JEU === -->
+  <main class="game" id="game">
     <div class="game-layout">
-      
       <!-- Zone plateau -->
       <div class="board-area">
-        <!-- Message de bienvenue placé ici -->
         <section class="welcome-message">
-          <h1>👋 Bienvenue sur notre  🔴Puissance 4🟡 !</h1>
+          <h1>👋 Bienvenue sur notre 🔴 Puissance 4 🟡 !</h1>
         </section>
 
-        <!-- Contrôles (boutons pour jouer dans chaque colonne) -->
- <div class="controls">
-  {{range $i, $cell := index .Grid 0}}
-    <form method="post" action="/play?col={{$i}}">
-      <button type="submit">⬇️</button>
-    </form>
-  {{end}}
-</div>
-
+        <!-- Contrôles -->
+        <div class="controls">
+          {{range $i, $cell := index .Grid 0}}
+            <form method="post" action="/play?col={{$i}}">
+              <button type="submit">⬇️</button>
+            </form>
+          {{end}}
+        </div>
 
         <!-- Plateau -->
         <div class="board">
@@ -61,34 +72,63 @@
         </div>
       </div>
 
-  <aside class="scoreboard-base scoreboard-game">
-  <h2 id="scores-title">Scores</h2>
-  <table aria-labelledby="scores-title">
-    <thead>
-      <tr>
-        <th>Joueur Rouge 🔴</th>
-        <th>Joueur Jaune 🟡</th>
-        <th>Matchs nuls 🤝</th>
-        <th>Total parties 🎮</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="player-red">{{.ScoreRed}}</td>
-        <td class="player-yellow">{{.ScoreYellow}}</td>
-        <td class="draws">{{.Draws}}</td>
-        <td class="games-played">{{.GamesPlayed}}</td>
-      </tr>
-    </tbody>
-  </table>
+      <!-- Scoreboard -->
+      <aside class="scoreboard-base scoreboard-game">
+        <h2 id="scores-title">Scores</h2>
+        <table aria-labelledby="scores-title">
+          <thead>
+            <tr>
+              <th>Joueur Rouge 🔴</th>
+              <th>Joueur Jaune 🟡</th>
+              <th>Matchs nuls 🤝</th>
+              <th>Total parties 🎮</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="player-red">{{.ScoreRed}}</td>
+              <td class="player-yellow">{{.ScoreYellow}}</td>
+              <td class="draws">{{.Draws}}</td>
+              <td class="games-played">{{.GamesPlayed}}</td>
+            </tr>
+          </tbody>
+        </table>
 
-  {{if .Message}}
-    <p class="game-message">{{.Message}}</p>
-  {{end}}
-</aside>
+        {{if .Message}}
+          <p class="game-message">{{.Message}}</p>
+        {{end}}
+      </aside>
     </div>
   </main>
+
+  <!-- === SCRIPT MENU === -->
+  <script>
+  const menu = document.getElementById('menu');
+  const playBtn = document.getElementById('play-btn');
+  const game = document.getElementById('game');
+
+  // Vérifie si le joueur a déjà lancé le jeu
+  const hasStarted = localStorage.getItem('gameStarted');
+
+  if (hasStarted === 'true') {
+    // Masquer le menu et afficher directement le jeu
+    menu.classList.add('hidden');
+    game.classList.add('active');
+  }
+
+  playBtn.addEventListener('click', () => {
+    menu.classList.add('hidden');
+    setTimeout(() => {
+      game.classList.add('active');
+    }, 800);
+
+    // On enregistre que le joueur a commencé une fois
+    localStorage.setItem('gameStarted', 'true');
+  });
+
+  document.getElementById('rules-btn').addEventListener('click', () => {
+    alert("🎯 Objectif : alignez 4 jetons de votre couleur (rouge ou jaune) à l'horizontale, verticale ou diagonale !");
+  });
+</script>
 </body>
 </html>
-
-
