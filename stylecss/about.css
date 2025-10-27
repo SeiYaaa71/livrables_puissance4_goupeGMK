@@ -1,0 +1,62 @@
+.about-table {
+width: 95%; /* encore plus large */
+max-width: 1000px; /* limite confortable */
+margin: 40px auto; /* espace autour du tableau */
+border-collapse: collapse;
+background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
+border: 2px solid rgba(77,163,255,.45);
+border-radius: 18px;
+overflow: hidden;
+box-shadow: 0 0 40px rgba(0,0,0,.75);
+font-size: 1.35rem; /* texte global légèrement plus grand */
+}
+
+.about-table th,
+.about-table td {
+padding: 28px 30px; /* plus de marge interne */
+vertical-align: top; /* texte aligné en haut pour plus de lisibilité */
+}
+
+.about-table th {
+width: 26%;
+font-weight: 800;
+color: #4da3ff;
+text-transform: uppercase;
+letter-spacing: .9px;
+font-size: 1.5rem; /* titres plus gros */
+}
+
+.about-table td {
+color: #e6f0ff;
+line-height: 1.8; /* plus d’espace entre les lignes */
+font-size: 1.35rem;
+}
+
+.about-table tr:last-child th,
+.about-table tr:last-child td {
+border-bottom: none;
+}
+
+#tesseract-container {
+width: 250px;
+height: 250px;
+margin: 70px auto;
+background: #0a0a0a; /* fond sombre pour contraste */
+border: 2px solid #2d79ff;
+border-radius: 8px;
+
+/* Glow externe + interne façon néon */
+box-shadow:
+0 0 12px rgba(45,121,255,.6),
+inset 0 0 16px rgba(0,0,0,.55);
+
+/* Transition douce si tu veux animer le hover */
+transition: all 0.3s ease;
+}
+
+#tesseract-container:hover {
+filter: brightness(1.1);
+box-shadow:
+0 0 20px rgba(45,121,255,.9),
+inset 0 0 20px rgba(45,121,255,.4);
+}

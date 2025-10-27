@@ -1,0 +1,9 @@
+/* Variante classement global */
+.scoreboard-ranking {
+width: 500px; height: auto;
+justify-content: center; margin-top: 20px;
+font-size: 1.25rem;
+}
+.scoreboard-ranking h2 { font-size: 2rem; }
+.scoreboard-ranking th, .scoreboard-ranking td { font-size: 1.3rem; padding: 18px; }
+.scoreboard-ranking .player-score { font-size: 1.4rem; }
