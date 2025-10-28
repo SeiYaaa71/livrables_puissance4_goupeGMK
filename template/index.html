@@ -1,151 +1,246 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ .Title }}</title>
-
-  <!-- Feuilles de style -->
-  <link rel="stylesheet" href="/stylecss/plus.css">
-  <link rel="stylesheet" href="/stylecss/index.css">
-  <link rel="stylesheet" href="/stylecss/menu.css">
-  <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/stylecss/plus.css">
+    <link rel="stylesheet" href="/stylecss/index.css">
+    <link rel="stylesheet" href="/stylecss/menu.css">
+    <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
 </head>
 <body>
 
-  <!-- === MENU D’ACCUEIL === -->
-  <div id="menu">
-    <h1>🔴 Puissance 4 🟡</h1>
-    <button class="menu-btn" id="play-btn">Jouer</button>
-    <button class="menu-btn" id="rules-btn">Règles</button>
-  </div>
-
-  <!-- === Barre de navigation === -->
-  <header class="topbar">
-    <div class="left">
-      <nav class="nav">
-        <a href="/" aria-current="page">🏠 Accueil</a>
-        <a href="/about">ℹ️ À propos</a>
-        <a href="/contact">📩 Contact</a>
-        <a href="/tableau">📊 Tableau des scores</a>
-      </nav>
-    </div>
-    <div class="right">
-      <!-- Retour au menu (JS, pas de reload) -->
-      <button type="button" id="back-to-menu" class="btn primary">🔙 Retour au Menu</button>
-
-      <!-- Nouvelle partie (reload serveur) -->
-      <form action="/reset" method="post" style="display:inline;">
-        <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
-      </form>
-
-      <!-- Reset scores -->
-      <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
-        <button type="submit" class="btn danger">🗑️ Reset scores</button>
-      </form>
-    </div>
-  </header>
-
-  <!-- === CONTENU DU JEU === -->
-  <main class="game" id="game">
-    <div class="game-layout">
-      <!-- Zone plateau -->
-      <div class="board-area">
-        <section class="welcome-message">
-          <h1>👋 Bienvenue sur notre 🔴 Puissance 4 🟡 !</h1>
-        </section>
-
-        <!-- Contrôles -->
-        <div class="controls">
-          {{range $i, $cell := index .Grid 0}}
-            <form method="post" action="/play?col={{$i}}">
-              <button type="submit">⬇️</button>
-            </form>
-          {{end}}
-        </div>
-
-        <!-- Plateau -->
-        <div class="board">
-          {{range .Grid}}
-            <div class="row">
-              {{range .}}
-                <div class="cell {{cellClass .}}"></div>
-              {{end}}
+    <div id="menu">
+        <h1>🔴 Puissance 4 🟡</h1>
+        <div class="pseudo-inputs">
+            <div class="pseudo-field">
+                <label for="pseudo1-menu">Joueur 1 (Rouge)</label>
+                <input type="text" id="pseudo1-menu" name="pseudo1" placeholder="Pseudo Joueur 1">
             </div>
-          {{end}}
+            <div class="pseudo-field">
+                <label for="pseudo2-menu">Joueur 2 (Jaune)</label>
+                <input type="text" id="pseudo2-menu" name="pseudo2" placeholder="Pseudo Joueur 2">
+            </div>
         </div>
-      </div>
-
-      <!-- Scoreboard -->
-      <aside class="scoreboard-base scoreboard-game">
-        <h2 id="scores-title">Scores</h2>
-        <table aria-labelledby="scores-title">
-          <thead>
-            <tr>
-              <th>Joueur Rouge 🔴</th>
-              <th>Joueur Jaune 🟡</th>
-              <th>Matchs nuls 🤝</th>
-              <th>Total parties 🎮</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="player-red">{{.ScoreRed}}</td>
-              <td class="player-yellow">{{.ScoreYellow}}</td>
-              <td class="draws">{{.Draws}}</td>
-              <td class="games-played">{{.GamesPlayed}}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {{if .Message}}
-          <p class="game-message">{{.Message}}</p>
-        {{end}}
-
-        <!-- Conteneur du tesseract -->
-        <div id="tesseract-container"></div>
-      </aside>
+        <p id="error-message" class="error-text"></p>
+        <button class="menu-btn" id="play-btn">Jouer</button>
+        <button class="menu-btn" id="rules-btn">Règles</button>
     </div>
-  </main>
 
-  <!-- === SCRIPT MENU === -->
+    <header class="topbar">
+        <div class="left">
+            <nav class="nav">
+                <a href="/" aria-current="page">🏠 Accueil</a>
+                <a href="/about">ℹ️ À propos</a>
+                <a href="/contact">📩 Contact</a>
+                <a href="/tableau">📊 Tableau des scores</a>
+            </nav>
+        </div>
+        <div class="right">
+            <button type="button" id="back-to-menu" class="btn primary">🔙 Retour au Menu</button>
+            <form action="/reset" method="post" style="display:inline;">
+                <button type="submit" class="btn primary" id="reset-btn">🔄 Nouvelle partie</button>
+            </form>
+            <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
+                <button type="submit" class="btn danger" id="reset-all-btn">🗑️ Reset scores</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="game" id="game">
+        <div class="game-layout">
+            <div class="board-area">
+                <section class="welcome-message">
+                    <h1>
+                        {{if .Message}}
+                            <span id="game-message-text">{{.Message}}</span>
+                        {{else}}
+                            👋 Bienvenue sur notre 🔴 Puissance 4 🟡 !
+                        {{end}}
+                    </h1>
+                </section>
+
+                <div class="controls">
+                    {{range $i, $cell := index .Grid 0}}
+                        <form method="post" action="/play?col={{$i}}">
+                            <button type="submit">⬇️</button>
+                        </form>
+                    {{end}}
+                </div>
+
+                <div class="board">
+                    {{range .Grid}}
+                        <div class="row">
+                            {{range .}}
+                                <div class="cell {{cellClass .}}"></div>
+                            {{end}}
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+
+            <aside class="scoreboard-base scoreboard-game">
+                <h2 id="scores-title">Scores</h2>
+                <table aria-labelledby="scores-title">
+                    <thead>
+                        <tr>
+                            <th id="score-pseudo-1">Joueur Rouge 🔴</th>
+                            <th id="score-pseudo-2">Joueur Jaune 🟡</th>
+                            <th>Matchs nuls 🤝</th>
+                            <th>Total parties 🎮</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="player-red">{{.Stats.Red}}</td>
+                            <td class="player-yellow">{{.Stats.Yellow}}</td>
+                            <td class="draws">{{.Stats.Draws}}</td>
+                            <td class="games-played">{{.Stats.Games}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="tesseract-container"></div>
+            </aside>
+        </div>
+    </main>
+
 <script>
-  const menu = document.getElementById('menu');
-  const playBtn = document.getElementById('play-btn');
-  const game = document.getElementById('game');
-  const backBtn = document.getElementById('back-to-menu');
+    const GAME_STARTED_KEY = 'gameStarted';
+    const PSEUDO1_KEY = 'pseudo1';
+    const PSEUDO2_KEY = 'pseudo2';
+    const LAST_MESSAGE_KEY = 'lastGameMessage';
 
-  // Vérifie l'état sauvegardé
-  const hasStarted = localStorage.getItem('gameStarted');
-  if (hasStarted === 'true') {
-    menu.classList.add('hidden');
-    game.classList.add('active');
-  }
+    const menu = document.getElementById('menu');
+    const playBtn = document.getElementById('play-btn');
+    const game = document.getElementById('game');
+    const backBtn = document.getElementById('back-to-menu');
+    
+    const scorePseudo1 = document.getElementById('score-pseudo-1');
+    const scorePseudo2 = document.getElementById('score-pseudo-2');
+    
+    const pseudo1Input = document.getElementById('pseudo1-menu');
+    const pseudo2Input = document.getElementById('pseudo2-menu');
+    const errorMsg = document.getElementById('error-message');
+    
+    const resetBtn = document.getElementById('reset-btn'); 
+    const resetAllBtn = document.getElementById('reset-all-btn'); 
 
-  // Jouer → cache le menu et affiche le jeu
-  playBtn.addEventListener('click', () => {
-    menu.classList.add('hidden');
-    setTimeout(() => {
-      game.classList.add('active');
-    }, 800);
-    localStorage.setItem('gameStarted', 'true'); // mémorise l'état
-  });
+    const rulesBtn = document.getElementById('rules-btn');
+    
+    const gameMessageElement = document.getElementById('game-message-text');
 
-  // Retour au menu → réaffiche le menu
-  backBtn.addEventListener('click', () => {
-    game.classList.remove('active');
-    menu.classList.remove('hidden');
-    localStorage.removeItem('gameStarted'); // efface l'état
-  });
+    if (sessionStorage.getItem(GAME_STARTED_KEY) === 'true') {
+        menu.classList.add('hidden');
+        game.classList.add('active');
 
-  // Règles
-  document.getElementById('rules-btn').addEventListener('click', () => {
-    alert("🎯 Objectif : alignez 4 jetons de votre couleur (rouge ou jaune) à l'horizontale, verticale ou diagonale !");
-  });
+        const savedPseudo1 = sessionStorage.getItem(PSEUDO1_KEY) || "Joueur Rouge";
+        const savedPseudo2 = sessionStorage.getItem(PSEUDO2_KEY) || "Joueur Jaune";
+        scorePseudo1.textContent = savedPseudo1 + ' 🔴';
+        scorePseudo2.textContent = savedPseudo2 + ' 🟡';
+    }
+
+    function saveGameToHistorique() {
+        if (!gameMessageElement) return;
+
+        const message = gameMessageElement.textContent.trim();
+        if (message === "") return;
+
+        const lastMessage = sessionStorage.getItem(LAST_MESSAGE_KEY);
+        if (message === lastMessage) return;
+
+        sessionStorage.setItem(LAST_MESSAGE_KEY, message);
+
+        const pseudo1 = sessionStorage.getItem(PSEUDO1_KEY) || "Joueur Rouge";
+        const pseudo2 = sessionStorage.getItem(PSEUDO2_KEY) || "Joueur Jaune";
+        let gameData = null;
+
+        if (message.includes("Le Joueur 1 🔴 a gagné")) {
+            gameData = { winner: pseudo1, loser: pseudo2, isDraw: false };
+        } else if (message.includes("Le Joueur 2 🟡 a gagné")) {
+            gameData = { winner: pseudo2, loser: pseudo1, isDraw: false };
+        } else if (message.includes("Match nul")) {
+            gameData = { winner: pseudo1, loser: pseudo2, isDraw: true };
+        }
+
+        if (gameData) {
+            console.log("Envoi des données au serveur:", gameData);
+            
+            fetch('/api/save-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(gameData),
+            })
+            .then(response => response.json())
+            .then(data => console.log("Réponse du serveur:", data))
+            .catch((error) => console.error('Erreur Fetch:', error));
+        }
+    }
+    
+    if (sessionStorage.getItem(GAME_STARTED_KEY) === 'true') {
+        saveGameToHistorique();
+    }
+
+    playBtn.addEventListener('click', () => {
+        const pseudo1Val = pseudo1Input.value.trim();
+        const pseudo2Val = pseudo2Input.value.trim();
+
+        if (pseudo1Val === '' || pseudo2Val === '') {
+            errorMsg.textContent = 'Veuillez remplir les deux pseudos !';
+            errorMsg.classList.add('visible');
+            return; 
+        }
+
+        errorMsg.classList.remove('visible');
+        
+        scorePseudo1.textContent = pseudo1Val + ' 🔴';
+        scorePseudo2.textContent = pseudo2Val + ' 🟡';
+
+        sessionStorage.setItem(GAME_STARTED_KEY, 'true');
+        sessionStorage.setItem(PSEUDO1_KEY, pseudo1Val);
+        sessionStorage.setItem(PSEUDO2_KEY, pseudo2Val);
+        sessionStorage.removeItem(LAST_MESSAGE_KEY);
+
+        menu.classList.add('hidden');
+        setTimeout(() => {
+            game.classList.add('active');
+        }, 800);
+    });
+
+    function hideErrorOnInput() {
+        errorMsg.classList.remove('visible');
+    }
+    pseudo1Input.addEventListener('input', hideErrorOnInput);
+    pseudo2Input.addEventListener('input', hideErrorOnInput);
+
+    function clearSessionState() {
+        sessionStorage.removeItem(GAME_STARTED_KEY);
+        sessionStorage.removeItem(PSEUDO1_KEY);
+        sessionStorage.removeItem(PSEUDO2_KEY);
+        sessionStorage.removeItem(LAST_MESSAGE_KEY);
+    }
+
+    backBtn.addEventListener('click', () => {
+        clearSessionState();
+        game.classList.remove('active');
+        menu.classList.remove('hidden');
+    });
+    
+    resetBtn.addEventListener('click', () => {
+        sessionStorage.removeItem(LAST_MESSAGE_KEY);
+    });
+    
+    resetAllBtn.addEventListener('click', () => {
+        sessionStorage.removeItem(LAST_MESSAGE_KEY);
+    });
+
+    rulesBtn.addEventListener('click', () => {
+        alert("🎯 Objectif : alignez 4 jetons de votre couleur (rouge ou jaune) à l'horizontale, verticale ou diagonale !");
+    });
 </script>
 
-
-  <!-- === SCRIPTS === -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-  <script src="/js/tesseract.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="/js/tesseract.js"></script>
 </body>
 </html>

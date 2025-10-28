@@ -1,59 +1,75 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ .Title }}</title>
-  <link rel="stylesheet" href="/stylecss/plus.css">
-  <link rel="stylesheet" href="/stylecss/tableau.css">
-  <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    
+    <link rel="stylesheet" href="/stylecss/plus.css">
+    <link rel="stylesheet" href="/stylecss/tableau.css">
+    <link rel="icon" type="image/x-icon" href="/image/welcome.ico">
 </head>
 <body>
-  <!-- Barre de navigation -->
-  <header class="topbar">
-    <div class="left">
-      <nav class="nav">
-        <a href="/">🏠 Accueil</a>
-        <a href="/about">ℹ️ À propos</a>
-        <a href="/contact">📩 Contact</a>
-        <a href="/tableau" aria-current="page">📊 Tableau des scores</a>
-      </nav>
-    </div>
-    <div class="right">
-      <form action="/reset" method="post" style="display:inline;" onsubmit="localStorage.removeItem('gameStarted')">
-        <button type="submit" class="btn primary">🔙 Retour au Menu</button>
-      </form>  
-      <form action="/reset" method="post" style="display:inline;">
-        <button type="submit" class="btn primary">🔄 Nouvelle partie</button>
-      </form>
-      <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
-        <button type="submit" class="btn danger">🗑️ Reset scores</button>
-      </form>
-    </div>
-  </header>
-
-  <!-- Contenu principal -->
-  <main class="content">
-    <div class="scoreboard-base scoreboard-ranking">
-      <h2>Tableau des scores 🏆</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Joueur</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{range .Players}}
-          <tr class="{{.Class}}">
-            <td class="player-name">{{.Icon}} {{.Name}}</td>
-            <td class="player-score">{{.Score}}</td>
-          </tr>
-          {{end}}
-        </tbody>
-      </table>
-    </div>
-  </main>
+    <header class="topbar">
+        <div class="left">
+            <nav class="nav">
+                <a href="/">🏠 Accueil</a>
+                <a href="/about">ℹ️ À propos</a>
+                <a href="/contact">📩 Contact</a>
+                <a href="/tableau"aria-current="page">📊 Tableau des scores</a>
+            </nav>
+        </div>
+        <div class="right">
+            <button type="button" id="retour-accueil-btn" class="btn primary">🔙 Retour au Menu</button>
+            <form action="/reset" method="post" style="display:inline;">
+                <button type="submit" class="btn primary" id="reset-btn">🔄 Nouvelle partie</button>
+            </form>
+            <form action="/resetall" method="post" style="display:inline; margin-left:10px;">
+                <button type="submit" class="btn danger" id="reset-all-btn">🗑️ Reset scores</button>
+            </form>
+        </div>
+    </header>
+    
+    <main class="content">
+        <div class="scoreboard-base scoreboard-history">
+            <h2>Historique des parties📜</h2>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Gagnant</th>
+                        <th>Perdant</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{if .History}}
+                        {{range .History}}
+                            <tr {{if .IsDraw}}class="draw-row"{{end}}>
+                                <td>{{if .IsDraw}}Match Nul{{else}}{{.Winner}}{{end}}</td>
+                                <td>{{if .IsDraw}}-{{else}}{{.Loser}}{{end}}</td>
+                                <td>{{.DateStr}}</td>
+                            </tr>
+                        {{end}}
+                    {{else}}
+                        <tr>
+                            <td colspan="3">Aucune partie n'a encore été sauvegardée.</td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const boutonRetour = document.getElementById('retour-accueil-btn');
+            
+            if (boutonRetour) {
+                boutonRetour.addEventListener('click', function() {
+                    window.location.href = '/'; 
+                });
+            }
+        });
+    </script>
 </body>
 </html>
-
 

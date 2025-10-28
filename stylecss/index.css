@@ -1,138 +1,291 @@
 html, body {
-height: 100%;
-overflow: hidden;
+  height: 100%;
+  overflow: hidden;
 }
 
 main.game {
-flex: 1;
-display: flex; justify-content: center; align-items: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .game-layout {
-display: flex; justify-content: center; align-items: center;
-gap: 35px; width: 100%; max-width: 1200px; margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 35px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-.board-area { display: flex; flex-direction: column; align-items: center; }
 
-/* --- Plateau --- */
+.board-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .controls {
-display: flex; justify-content: center; gap: 10px;
-margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
+
 .controls button {
-width: 90px; height: 75px;
-border-radius: 12px;
-background: linear-gradient(180deg,#2d79ff,#1b5ed6);
-color: #fff; font-weight: 700; font-size: 2rem;
-border: 1px solid rgba(255,255,255,.15);
-box-shadow: 0 6px 16px rgba(0,0,0,.35);
-cursor: pointer;
-transition: transform .15s, filter .15s;
+  width: 90px;
+  height: 75px;
+  border-radius: 12px;
+  background: linear-gradient(180deg,#2d79ff,#1b5ed6);
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+  cursor: pointer;
+  transition: transform .15s, filter .15s;
 }
+
 .controls button:hover {
-transform: translateY(-2px);
-filter: brightness(1.1);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
 .board {
-display: flex; flex-direction: column; gap: 20px; align-items: center;
-background: #0d2970;
-padding: 60px; border-radius: 30px;
-box-shadow: 0 0 30px rgba(0,0,0,.6);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  background: #0d2970;
+  padding: 60px;
+  border-radius: 30px;
+  box-shadow: 0 0 30px rgba(0,0,0,.6);
 }
-.row { display: flex; gap: 10px; }
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
 .cell {
-width: 90px; height: 90px;
-border-radius: 50%;
-background: #1b263b;
-box-shadow: inset 0 0 8px rgba(0,0,0,.7);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #1b263b;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.7);
 }
+
 .player1,
 .player2 {
-box-shadow: inset 0 0 12px rgba(255,255,255,.4),
-inset 0 0 20px rgba(0,0,0,.8);
-}
-.player1 {
-background: radial-gradient(circle at 30% 30%,#ff6666,#cc0000);
-}
-.player2 {
-background: radial-gradient(circle at 30% 30%,#ffff99,#e6c200);
+  box-shadow: inset 0 0 12px rgba(255,255,255,.4),
+              inset 0 0 20px rgba(0,0,0,.8);
 }
 
-/* Variante accueil (scores de partie) */
-.scoreboard-game {
-width: 480px; height: 650px;
-justify-content: flex-start;
-transform: translateY(30px);
-font-size: 1.2rem;
+.player1 {
+  background: radial-gradient(circle at 30% 30%,#ff6666,#cc0000);
 }
-.scoreboard-game h2 { font-size: 1.8rem; }
-.scoreboard-game th, .scoreboard-game td { font-size: 1.2rem; padding: 16px; }
-.scoreboard-game .player-score { font-size: 1.3rem; }
+
+.player2 {
+  background: radial-gradient(circle at 30% 30%,#ffff99,#e6c200);
+}
+
+.scoreboard-game {
+  width: 480px;
+  height: 650px;
+  justify-content: flex-start;
+  transform: translateY(30px);
+  font-size: 1.2rem;
+}
+
+.scoreboard-game h2 {
+  font-size: 1.8rem;
+}
+
+.scoreboard-game th,
+.scoreboard-game td {
+  font-size: 1.2rem;
+  padding: 16px;
+}
+
+.scoreboard-game .player-score {
+  font-size: 1.3rem;
+}
 
 .welcome-message h1 {
-position: relative;
-top: -50px; /* valeur négative = vers le haut */
-text-align: center;
-font-size: 2rem;
-font-weight: 800;
-color: #4da3ff;
-text-transform: uppercase;
-letter-spacing: 1px;
-text-shadow: 0 0 8px rgba(34, 111, 194, 0.6);
-margin-top: -100px;
+  position: relative;
+  top: -50px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #4da3ff;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(34, 111, 194, 0.6);
+  margin-top: -100px;
 }
 
-/* Animation d’apparition */
 @keyframes fadeInDown {
-from {
-opacity: 0;
-transform: translateY(-30px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Style du message de jeu (encouragements, victoire, etc.) */
 .game-message {
-text-align: center;
-font-size: 1.6rem; /* texte plus grand */
-font-weight: bold;
-margin-top: 20px;
-padding: 12px 18px;
-border-radius: 10px;
-color: #fff;
-animation: fadeIn 0.6s ease-in-out;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 20px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  color: #fff;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-/* Animation d’apparition */
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(10px); }
-to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 #tesseract-container {
-width: 250px;
-height: 250px;
-margin: 70px auto;
-background: #0a0a0a; /* fond sombre pour contraste */
-border: 2px solid #2d79ff;
-border-radius: 8px;
-
-/* Glow externe + interne façon néon */
-box-shadow:
-0 0 12px rgba(45,121,255,.6),
-inset 0 0 16px rgba(0,0,0,.55);
-
-/* Transition douce si tu veux animer le hover */
-transition: all 0.3s ease;
+  width: 250px;
+  height: 250px;
+  margin: 70px auto;
+  background: #0a0a0a;
+  border: 2px solid #2d79ff;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(45,121,255,.6),
+              inset 0 0 16px rgba(0,0,0,.55);
+  transition: all 0.3s ease;
 }
 
 #tesseract-container:hover {
-filter: brightness(1.1);
-box-shadow:
-0 0 20px rgba(45,121,255,.9),
-inset 0 0 20px rgba(45,121,255,.4);
+  filter: brightness(1.1);
+  box-shadow: 0 0 20px rgba(45,121,255,.9),
+              inset 0 0 20px rgba(45,121,255,.4);
+}
+
+#menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #0a3d73 0%, #062a50 40%, #041d39 70%, #041a33 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  transition: opacity 0.8s ease, visibility 0.8s;
+  opacity: 1;
+  visibility: visible;
+}
+
+#menu.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#menu h1 {
+  font-size: 3rem;
+  color: #f5f7fb;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  margin-bottom: 40px;
+}
+
+.menu-btn {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(180deg, #2d79ff, #1b5ed6);
+  border: none;
+  border-radius: 12px;
+  padding: 15px 40px;
+  margin: 10px 0;
+  min-width: 250px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.menu-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.pseudo-inputs {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.pseudo-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pseudo-field label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #aecdff;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.pseudo-field input[type="text"] {
+  width: 250px;
+  padding: 12px 16px;
+  font-size: 1.1rem;
+  color: #e6f0ff;
+  background: linear-gradient(180deg, rgba(18, 34, 70, 0.9), rgba(12, 26, 58, 0.9));
+  border: 1px solid rgba(77, 163, 255, 0.35);
+  border-radius: 10px;
+  outline: none;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pseudo-field input[type="text"]:focus {
+  border-color: #2d79ff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(45, 121, 255, 0.25);
+}
+
+@media (max-width: 768px) {
+  #menu h1 {
+    font-size: 2.2rem;
+  }
+  .menu-btn {
+    font-size: 1.2rem;
+    min-width: 220px;
+    padding: 12px 30px;
+  }
+  .pseudo-inputs {
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .pseudo-field input[type="text"] {
+    width: 220px;
+  }
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  height: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.error-text.visible {
+  opacity: 1;
 }

@@ -1,81 +1,76 @@
-/* --- Neutralise le lien actif "Contact" --- */
 .nav a.active {
-color: #e7ecf7 !important;
-cursor: default !important;
-pointer-events: none; /* bloque clic + hover */
-text-decoration: none !important;
+    color: #e7ecf7 !important;
+    cursor: default !important;
+    pointer-events: none;
+    text-decoration: none !important;
 }
 
 .contact-table {
-overflow: hidden;
-position: relative;
+    overflow: hidden;
+    position: relative;
 }
 
 .contact-table th {
-font-size: 1.45rem;
-width: 25%;
-color: #4da3ff;
+    font-size: 1.45rem;
+    width: 25%;
+    color: #4da3ff;
 }
 
 .contact-table td {
-font-size: 1.3rem;
-width: 75%;
+    font-size: 1.3rem;
+    width: 75%;
 }
 
-/* --- Champs du formulaire Contact --- */
 .contact-table input[type="text"],
 .contact-table input[type="email"],
 .contact-table textarea {
-width: 90%;
-margin: 0 auto;
-display: block;
-padding: 20px 24px;
-font-size: 1.2rem;
-color: #e6f0ff;
-background: linear-gradient(180deg, rgba(18,34,70,.9), rgba(12,26,58,.9));
-border: 1px solid rgba(77,163,255,.35);
-border-radius: 14px;
-outline: none;
-box-shadow: inset 0 0 14px rgba(0,0,0,.55);
-transition: border-color .2s, box-shadow .2s, filter .2s;
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+    padding: 20px 24px;
+    font-size: 1.2rem;
+    color: #e6f0ff;
+    background: linear-gradient(180deg, rgba(18,34,70,.9), rgba(12,26,58,.9));
+    border: 1px solid rgba(77,163,255,.35);
+    border-radius: 14px;
+    outline: none;
+    box-shadow: inset 0 0 14px rgba(0,0,0,.55);
+    transition: border-color .2s, box-shadow .2s, filter .2s;
 }
 
-/* --- Focus spécifiques --- */
 .contact-table input[type="text"]:focus,
 .contact-table input[type="email"]:focus,
 .contact-table textarea:focus {
-border-color: #2d79ff;
-box-shadow:
-0 0 0 4px rgba(45,121,255,.25),
-inset 0 0 16px rgba(0,0,0,.55);
-filter: brightness(1.08);
+    border-color: #2d79ff;
+    box-shadow:
+        0 0 0 4px rgba(45,121,255,.25),
+        inset 0 0 16px rgba(0,0,0,.55);
+    filter: brightness(1.08);
 }
 
 .contact-table textarea {
-resize: vertical;
-min-height: 160px;
+    resize: vertical;
+    min-height: 160px;
 }
 
 .contact-table .no-hover:hover {
-color: inherit !important;
-cursor: default !important;
-text-decoration: none !important;
-pointer-events: none;
+    color: inherit !important;
+    cursor: default !important;
+    text-decoration: none !important;
+    pointer-events: none;
 }
 
-
-/* --- Boutons --- */
 .btn {
-color: #fff; font-weight: 700;
-border: none; border-radius: 8px;
-padding: 10px 20px;
-box-shadow: 0 6px 16px rgba(0,0,0,.25);
-cursor: pointer;
-transition: transform .15s, filter .15s;
+    color: #fff; font-weight: 700;
+    border: none; border-radius: 8px;
+    padding: 10px 20px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.25);
+    cursor: pointer;
+    transition: transform .15s, filter .15s;
 }
 .btn:hover {
-transform: translateY(-2px);
-filter: brightness(1.08);
+    transform: translateY(-2px);
+    filter: brightness(1.08);
 }
 .btn.primary { background: linear-gradient(180deg,#2d79ff,#1b5ed6); }
 .btn.danger { background: linear-gradient(180deg,#ff4d4d,#cc0000); }

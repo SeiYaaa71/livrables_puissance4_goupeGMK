@@ -1,222 +1,187 @@
 body {
-margin: 0;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-color: #f5f7fb;
-background: linear-gradient(180deg,#0a3d73 0%,#062a50 40%,#041d39 70%,#041a33 100%);
-background-attachment: fixed;
-background-size: cover;
-display: flex;
-flex-direction: column;
-min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f5f7fb;
+    background: linear-gradient(180deg,#0a3d73 0%,#062a50 40%,#041d39 70%,#041a33 100%);
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
-
-/* --- Topbar --- */
 .topbar {
-position: sticky; top: 0;
-display: flex; justify-content: space-between; align-items: center;
-padding: 14px 24px;
-background: rgba(5,29,59,.85);
-backdrop-filter: blur(8px);
-border-bottom: 1px solid rgba(255,255,255,.08);
-box-shadow: 0 2px 10px rgba(0,0,0,.25);
-z-index: 100;
+    position: sticky; top: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px;
+    background: rgba(5,29,59,.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    z-index: 100;
 }
 .nav { display: flex; gap: 20px; }
 .nav a {
-position: relative;
-color: #e7ecf7;
-text-decoration: none;
-font-weight: 600;
-padding: 6px 10px;
-border-radius: 6px;
-transition: color .2s;
+    position: relative;
+    color: #e7ecf7;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: color .2s;
 }
 .nav a:hover { color: #fff; }
-/* Ligne bleue animée */
 .nav a::after {
-content: "";
-position: absolute;
-left: 0; bottom: -4px;
-width: 0; height: 2px;
-background: #2d79ff;
-transition: width .3s ease;
+    content: "";
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 2px;
+    background: #2d79ff;
+    transition: width .3s ease;
 }
 .nav a:hover::after,
 .nav a.active::after { width: 100%; }
-
 .topbar .right { display: flex; align-items: center; gap: 10px; }
-
-/* Lien actif (page courante) */
 .nav a[aria-current="page"]::after {
-width: 100%;
+    width: 100%;
 }
-
-/* Style pour le texte statique dans la nav */
 .nav-static {
-color: #e7ecf7;
-font-weight: 600;
-padding: 6px 10px;
-border-radius: 6px;
-cursor: default; /* curseur normal */
+    color: #e7ecf7;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: default;
 }
 .nav-static:hover {
-color: inherit;
-cursor: default;
-text-decoration: none;
+    color: inherit;
+    cursor: default;
+    text-decoration: none;
 }
-
-
-/* --- Boutons --- */
 .btn {
-color: #fff; font-weight: 700;
-border: none; border-radius: 8px;
-padding: 10px 20px;
-box-shadow: 0 6px 16px rgba(0,0,0,.25);
-cursor: pointer;
-transition: transform .15s, filter .15s;
+    color: #fff; font-weight: 700;
+    border: none; border-radius: 8px;
+    padding: 10px 20px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.25);
+    cursor: pointer;
+    transition: transform .15s, filter .15s;
 }
 .btn:hover {
-transform: translateY(-2px);
-filter: brightness(1.08);
+    transform: translateY(-2px);
+    filter: brightness(1.08);
 }
 .btn.primary { background: linear-gradient(180deg,#2d79ff,#1b5ed6); }
 .btn.danger { background: linear-gradient(180deg,#ff4d4d,#cc0000); }
-
-/* --- Layout --- */
 main.content {
-flex: 1;
-display: flex; justify-content: center; align-items: center;
-padding: 100px 20px;
+    flex: 1;
+    display: flex; justify-content: center; align-items: center;
+    padding: 100px 20px;
 }
-
-/* --- Scoreboards (Base) --- */
 .scoreboard-base {
-background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
-border-radius: 16px; padding: 30px;
-box-shadow: 0 0 30px rgba(0,0,0,.7);
-border: 1px solid rgba(77,163,255,.35);
-color: #e6f0ff;
-display: flex; flex-direction: column; align-items: center; gap: 22px;
+    background: linear-gradient(180deg,rgba(20,40,80,.95),rgba(10,25,55,.95));
+    border-radius: 16px; padding: 30px;
+    box-shadow: 0 0 30px rgba(0,0,0,.7);
+    border: 1px solid rgba(77,163,255,.35);
+    color: #e6f0ff;
+    display: flex; flex-direction: column; align-items: center; gap: 22px;
 }
 .scoreboard-base h2 {
-font-size: 1.6rem; font-weight: 700;
-text-transform: uppercase; letter-spacing: 1.2px;
-color: #4da3ff;
-margin: 0; padding-bottom: 0;
-text-align: center;
+    font-size: 1.6rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    color: #4da3ff;
+    margin: 0; padding-bottom: 0;
+    text-align: center;
 }
 .scoreboard-base table {
-width: 100%; border-collapse: collapse; text-align: center; margin: 0;
+    width: 100%; border-collapse: collapse; text-align: center; margin: 0;
 }
 .scoreboard-base th, .scoreboard-base td {
-padding: 14px; font-size: 1.15rem; font-weight: 500;
-border-bottom: 1px solid rgba(255,255,255,.15);
+    padding: 14px; font-size: 1.15rem; font-weight: 500;
+    border-bottom: 1px solid rgba(255,255,255,.15);
 }
 .scoreboard-base th {
-text-transform: uppercase; font-size: 1rem; letter-spacing: .6px; color: #aecdff;
+    text-transform: uppercase; font-size: 1rem; letter-spacing: .6px; color: #aecdff;
 }
 .scoreboard-base .player-red .player-name { color: #ff4d4d; font-weight: 700; }
 .scoreboard-base .player-yellow .player-name { color: #ffeb3b; font-weight: 700; }
 .scoreboard-base .player-score { font-weight: 700; font-size: 1.25rem; }
-
-/* --- Tableaux (Base) --- */
 .styled-table {
-width: 65%; /* un peu moins large */
-max-width: 1200px; /* limite raisonnable */
-margin: 20px auto; /* marges plus fines */
-font-size: 1.1rem; /* texte plus petit */
-table-layout: fixed;
-border-collapse: separate;
-border-spacing: 0 4px; /* lignes plus serrées */
-
-background: linear-gradient(180deg, rgba(20, 40, 80, .95), rgba(10, 25, 55, .95));
-border: 2px solid rgba(77, 163, 255, .45);
-border-radius: 30px; /* arrondi plus discret */
-overflow: hidden;
-box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+    width: 65%;
+    max-width: 1200px;
+    margin: 20px auto;
+    font-size: 1.1rem;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 4px;
+    background: linear-gradient(180deg, rgba(20, 40, 80, .95), rgba(10, 25, 55, .95));
+    border: 2px solid rgba(77, 163, 255, .45);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .6);
 }
-
 .styled-table th,
 .styled-table td {
-padding: 24px 28px;
-border-bottom: 1px solid rgba(255,255,255,.2);
-vertical-align: top;
+    padding: 24px 28px;
+    border-bottom: 1px solid rgba(255,255,255,.2);
+    vertical-align: top;
 }
-
 .styled-table th {
-width: 26%;
-font-weight: 800;
-color: #4da3ff;
-text-transform: uppercase;
-letter-spacing: .8px;
+    width: 26%;
+    font-weight: 800;
+    color: #4da3ff;
+    text-transform: uppercase;
+    letter-spacing: .8px;
 }
-
 .styled-table td {
-color: #e6f0ff;
-line-height: 1.6;
+    color: #e6f0ff;
+    line-height: 1.6;
 }
-
 .styled-table tr:last-child th,
 .styled-table tr:last-child td {
-border-bottom: none;
+    border-bottom: none;
 }
-
-/* --- Hover doux sur les lignes --- */
 .styled-table tbody tr:hover {
-background: linear-gradient(180deg, rgba(24,46,90,.95), rgba(14,30,66,.95));
-transition: background .25s ease; /* ajout d'une transition fluide */
+    background: linear-gradient(180deg, rgba(24,46,90,.95), rgba(14,30,66,.95));
+    transition: background .25s ease;
 }
-
-
-/* --- Sous-titre des pages (About, Contact, etc.) --- */
 .subtitle {
-margin: 0 auto 50px auto; /* encore plus d’espace sous le texte */
-max-width: 900px; /* un peu plus large */
-display: block;
-font-size: 1.35rem; /* texte plus grand */
-color: #aecdff;
-text-align: center;
-line-height: 1.7; /* plus d’air entre les lignes */
+    margin: 0 auto 50px auto;
+    max-width: 900px;
+    display: block;
+    font-size: 1.35rem;
+    color: #aecdff;
+    text-align: center;
+    line-height: 1.7;
 }
-
-/* --- Titres statiques (Contact, About, Scoreboard) --- */
 .title {
-text-align: center;
-font-size: 2rem;
-color: #4da3ff;
-font-weight: 700;
-cursor: default;
-pointer-events: none; /* empêche toute interaction */
-text-decoration: none;
+    text-align: center;
+    font-size: 2rem;
+    color: #4da3ff;
+    font-weight: 700;
+    cursor: default;
+    pointer-events: none;
+    text-decoration: none;
 }
 .title:hover {
-color: inherit;
-cursor: default;
-text-decoration: none;
+    color: inherit;
+    cursor: default;
+    text-decoration: none;
 }
-
-/* Exception : dans la topbar (navigation), on garde l'interaction */
 .topbar .title {
-pointer-events: auto;
-cursor: pointer;
+    pointer-events: auto;
+    cursor: pointer;
 }
-
-/* --- Sous-titre neutre (optionnel) --- */
 .no-hover {
-text-align: center;
-font-size: 1.3rem; /* même taille que td */
-font-style: italic;
-padding-bottom: 20px;
-cursor: default;
-pointer-events: none;
+    text-align: center;
+    font-size: 1.3rem;
+    font-style: italic;
+    padding-bottom: 20px;
+    cursor: default;
+    pointer-events: none;
 }
 .no-hover:hover {
-color: inherit !important;
-cursor: default !important;
-text-decoration: none !important;
+    color: inherit !important;
+    cursor: default !important;
+    text-decoration: none !important;
 }
-
-/* --- Supprime les lignes dans TOUS les tableaux --- */
 .styled-table th,
 .styled-table td,
 .about-table th,
@@ -229,5 +194,5 @@ text-decoration: none !important;
 .scoreboard-game td,
 .scoreboard-ranking th,
 .scoreboard-ranking td {
-border-bottom: none !important;
+    border-bottom: none !important;
 }

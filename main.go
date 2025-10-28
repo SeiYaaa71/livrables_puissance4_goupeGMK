@@ -21,7 +21,6 @@ const (
     reset  = "\033[0m"
 )
 
-// clearConsole efface la console selon l'OS
 func clearConsole() {
     var cmd *exec.Cmd
     if runtime.GOOS == "windows" {
@@ -36,36 +35,30 @@ func clearConsole() {
 func main() {
     clearConsole()
 
-    // Port configurable
     port := os.Getenv("PORT")
     if port == "" {
         port = "8080"
     }
 
-    // --- ROUTER PRINCIPAL ---
     mux := router.New()
 
-    // --- SERVEUR ---
     srv := &http.Server{
         Addr:         ":" + port,
-        Handler:      mux, // plus de middleware de log
+        Handler:      mux,
         ReadTimeout:  10 * time.Second,
         WriteTimeout: 10 * time.Second,
         IdleTimeout:  60 * time.Second,
     }
 
-    // Messages colorés de lancement
     fmt.Printf("%s🚀 Serveur lancé ! 🚀%s\n", green, reset)
     fmt.Printf("%s🌐 http://localhost:%s 🌐%s\n", yellow, port, reset)
 
-    // Lancement serveur
     go func() {
         if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
             log.Fatalf("Erreur serveur: %v", err)
         }
     }()
 
-    // Gestion arrêt propre
     quit := make(chan os.Signal, 1)
     signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
     <-quit
